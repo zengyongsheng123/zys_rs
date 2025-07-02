@@ -1,0 +1,14 @@
+setup.py
+dangdang_book/__init__.py
+dangdang_book/insert_start_url.py
+dangdang_book/items.py
+dangdang_book/middlewares.py
+dangdang_book/pipelines.py
+dangdang_book/settings.py
+dangdang_book/spiders/__init__.py
+dangdang_book/spiders/book.py
+project.egg-info/PKG-INFO
+project.egg-info/SOURCES.txt
+project.egg-info/dependency_links.txt
+project.egg-info/entry_points.txt
+project.egg-info/top_level.txt

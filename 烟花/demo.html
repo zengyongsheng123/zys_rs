@@ -1,0 +1,544 @@
+<?php
+// 初始化计数器
+$counterFile = 'counter.txt';
+if (!file_exists($counterFile)) {
+    file_put_contents($counterFile, 0); // 如果文件不存在，则创建一个并设置计数为0
+}
+
+// 读取并增加计数器
+$counter = (int)file_get_contents($counterFile);
+$counter++;
+file_put_contents($counterFile, $counter);
+
+// 显示计数器
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>新年快乐</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#000000">
+    <link rel="shortcut icon" type="image/png"
+          href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/firework-burst-icon-v2.png">
+    <link rel="icon" type="image/png"
+          href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/firework-burst-icon-v2.png">
+    <link rel="apple-touch-icon-precomposed"
+          href="https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/firework-burst-icon-v2.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage"
+          content="https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/firework-burst-icon-v2.png">
+    <link href="https://9.waaf.top/2/css/css.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://9.waaf.top/2/css/reset.min.css">
+    <link rel="stylesheet" href="https://9.waaf.top/2/css/style.css">
+    <!--<script src="https://9.waaf.top/2/js/jquery.min.js" type="text/javascript"></script>-->
+
+    <style type="text/css" media="all">
+        .text-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+
+            animation: cursor-blink 1s steps(2, start) infinite;
+        }
+
+        @keyframes cursor-blink {
+            to {
+                visibility: hidden;
+            }
+        }
+    </style>
+
+    <script>
+
+        var shouci = true;
+        console.log(shouci);
+
+        function bodyPlayMusic() {
+            if (shouci) {
+                shouci = false;
+                audio.play();
+                console.log(shouci);
+            }
+        };
+
+    </script>
+
+</head>
+<!-- onclick="bodyPlayMusic()" -->
+<body>
+<!-- 倒计时显示 -->
+<div id="countdown" style="font-size: 24px; color: #fff; text-align: center; margin-top: 20px;">
+    <!-- 实时倒计时会显示在这里 -->
+</div>
+<!-- clickMusic() -->
+<div id="gg" style="display: none; ">
+</div>
+
+<script src="https://9.waaf.top/2/js/game2.js"></script>
+
+
+<div class="type_words"><p id="contents1" style="display: none;"><span class="text-cursor cur-end">❤️</span></p></div>
+
+
+
+<img id="music_ico" onclick="" alt="" style=" display: inline; float: right;  ">
+
+<audio id="audioDom" src="https://sf6-cdn-tos.douyinstatic.com/obj/ies-music/7161981385975352077.mp3" preload="auto"
+       loop="loop"></audio>
+
+<div id="yhBtn"
+     style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:999;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#fff ; font-size:15px ;   ">
+    <p>💥点爆</p>
+    <img id="yhks" style="width:64px;margin-bottom:24px "
+         src="https://p3-sign.toutiaoimg.com/tos-cn-i-qvj2lq49k0/aee169ba675b45da9c46178a7dff7141~tplv-tt-shrink:640:0.image?traceid=2023031217004633E93ACFE2CECD4E7B70&x-expires=2147483647&x-signature=s7SeUD%2FlMsfTpWPP7Tl47sPaT%2BQ%3D">
+
+</div>
+
+<div style="height: 0; width: 0; position: absolute; visibility: hidden;">
+    <svg xmlns="http://www.w3.org/2000/svg">
+        <symbol id="icon-play" viewbox="0 0 24 24">
+            <path d="M8 5v14l11-7z"></path>
+        </symbol>
+        <symbol id="icon-pause" viewbox="0 0 24 24">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
+        </symbol>
+        <symbol id="icon-close" viewbox="0 0 24 24">
+            <path
+                    d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
+            </path>
+        </symbol>
+        <symbol id="icon-settings" viewbox="0 0 24 24">
+            <path
+                    d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z">
+            </path>
+        </symbol>
+        <symbol id="icon-sound-on" viewbox="0 0 24 24">
+            <path
+                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z">
+            </path>
+        </symbol>
+        <symbol id="icon-sound-off" viewbox="0 0 24 24">
+            <path
+                    d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z">
+            </path>
+        </symbol>
+    </svg>
+</div>
+
+<!-- App -->
+<div class="container">
+    <div class="loading-init">
+        <div class="loading-init__header"></div>
+        <div class="loading-init__status"></div>
+    </div>
+    <div class="stage-container remove">
+        <div class="page_two hide">
+
+        </div>
+        <div class="canvas-container">
+            <canvas id="trails-canvas"></canvas>
+            <canvas id="main-canvas"
+                    style="touch-action: none; width: 500px; height: 879px; background: url() 0% 0% / 100% repeat; opacity: 1;"></canvas>
+        </div>
+
+        <div class="menu hide">
+            <div class="menu__inner-wrap">
+                <div class="btn btn--bright close-menu-btn">
+                    <svg fill="white" width="24" height="24">
+                        <use href="#icon-close" xlink:href="#icon-close"></use>
+                    </svg>
+                </div>
+
+                <form>
+                    <div class="form-option form-option--select">
+                        <label class="shell-type-label">烟花类型</label>
+                        <select class="shell-type"></select>
+                    </div>
+                    <div class="form-option form-option--select">
+                        <label class="shell-size-label">烟花大小</label>
+                        <select class="shell-size"></select>
+                    </div>
+                    <div class="form-option form-option--select">
+                        <label class="quality-ui-label">画质</label>
+                        <select class="quality-ui"></select>
+                    </div>
+                    <div class="form-option form-option--select">
+                        <label class="sky-lighting-label">天空照明</label>
+                        <select class="sky-lighting"></select>
+                    </div>
+                    <div class="form-option form-option--select">
+                        <label class="scaleFactor-label">规模</label>
+                        <select class="scaleFactor"></select>
+                    </div>
+                    <div class="form-option form-option--checkbox">
+                        <label class="auto-launch-label">自动发射</label>
+                        <input class="auto-launch" type="checkbox">
+                    </div>
+                    <div class="form-option form-option--checkbox form-option--finale-mode">
+                        <label class="finale-mode-label">结局模式</label>
+                        <input class="finale-mode" type="checkbox">
+                    </div>
+                    <div class="form-option form-option--checkbox">
+                        <label class="hide-controls-label">隐藏控制器</label>
+                        <input class="hide-controls" type="checkbox">
+                    </div>
+                    <div class="form-option form-option--checkbox form-option--fullscreen">
+                        <label class="fullscreen-label">全屏</label>
+                        <input class="fullscreen" type="checkbox">
+                    </div>
+                    <div class="form-option form-option--checkbox">
+                        <label class="long-exposure-label">打开快门</label>
+                        <input class="long-exposure" type="checkbox">
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="help-modal">
+        <div class="help-modal__overlay"></div>
+        <div class="help-modal__dialog">
+            <div class="help-modal__header"></div>
+            <div class="help-modal__body"></div>
+            <button type="button" class="help-modal__close-btn">关闭</button>
+        </div>
+    </div>
+</div>
+
+<!-- partial -->
+<script>
+    // 		window.myWord="倒计时还有43天2小时44分钟跨年，提前祝你新年快乐！<br><br>新年快乐 平安喜乐 万事如意🧨<br>唯愿烟花像星辰   祝你所愿皆成真🧨<br><br>连击屏幕有烟花🧨<br><br>你是第224120个观赏到烟花的人~";
+    // 		window.words = ["",{volist name="str_" id="vo"}"{$vo}",{/volist}]
+</script>
+<script type="text/javascript" src="https://9.waaf.top/2/js/z_stat.js"></script>
+<script src="https://9.waaf.top/2/js/jquery.min.js" type="text/javascript"></script>
+<script src='https://9.waaf.top/2/js/fscreen@1.0.1.js'></script>
+<script src='https://9.waaf.top/2/js/stage@0.1.4.js'></script>
+<script src='https://9.waaf.top/2/js/mymath.js'></script>
+<script src="https://9.waaf.top/2/js/script.js"></script>
+<script src="https://9.waaf.top/2/js/main.js?v=2"></script>
+<script src="https://9.waaf.top/2/js/game.js?v=1"></script>
+
+
+<script type="text/javascript" charset="utf-8">
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        var verificationButton = document.getElementById('yhks');
+        verificationButton.addEventListener('click', function () {
+
+            var _0xodS = 'jsjiami.com.v7';
+            const _0x1055d9 = _0x335b;
+            if (function (_0x228f0b, _0x36fa09, _0x652e7c, _0x509d7e, _0x22a006, _0x2ebd87, _0x18b29f) {
+                return _0x228f0b = _0x228f0b >> 0x1, _0x2ebd87 = 'hs', _0x18b29f = 'hs', function (_0x8cc1d2, _0x4cdf74, _0x4ced5a, _0x1dbf97, _0x318067) {
+                    const _0x354803 = _0x335b;
+                    _0x1dbf97 = 'tfi', _0x2ebd87 = _0x1dbf97 + _0x2ebd87, _0x318067 = 'up', _0x18b29f += _0x318067, _0x2ebd87 = _0x4ced5a(_0x2ebd87), _0x18b29f = _0x4ced5a(_0x18b29f), _0x4ced5a = 0x0;
+                    const _0x578813 = _0x8cc1d2();
+                    while (!![] && --_0x509d7e + _0x4cdf74) {
+                        try {
+                            _0x1dbf97 = parseInt(_0x354803(0xd3, '6Xtl')) / 0x1 + -parseInt(_0x354803(0xad, '2ho%')) / 0x2 * (-parseInt(_0x354803(0x11a, '^Ngf')) / 0x3) + -parseInt(_0x354803(0xfc, 'h$Vm')) / 0x4 * (-parseInt(_0x354803(0xc7, 'e4Z&')) / 0x5) + -parseInt(_0x354803(0xfd, 'K!bN')) / 0x6 * (-parseInt(_0x354803(0x119, '1prg')) / 0x7) + parseInt(_0x354803(0xcc, 'GYNw')) / 0x8 * (-parseInt(_0x354803(0xc5, 'DMn&')) / 0x9) + -parseInt(_0x354803(0xf4, 'utYe')) / 0xa * (parseInt(_0x354803(0xfa, 'Y6qV')) / 0xb) + -parseInt(_0x354803(0xef, '6Xtl')) / 0xc;
+                        } catch (_0x2cdaae) {
+                            _0x1dbf97 = _0x4ced5a;
+                        } finally {
+                            _0x318067 = _0x578813[_0x2ebd87]();
+                            if (_0x228f0b <= _0x509d7e) _0x4ced5a ? _0x22a006 ? _0x1dbf97 = _0x318067 : _0x22a006 = _0x318067 : _0x4ced5a = _0x318067; else {
+                                if (_0x4ced5a == _0x22a006['replace'](/[VBbKCMlgWJePynNAGTRxp=]/g, '')) {
+                                    if (_0x1dbf97 === _0x4cdf74) {
+                                        _0x578813['un' + _0x2ebd87](_0x318067);
+                                        break;
+                                    }
+                                    _0x578813[_0x18b29f](_0x318067);
+                                }
+                            }
+                        }
+                    }
+                }(_0x652e7c, _0x36fa09, function (_0x1ef423, _0x1c5133, _0x28ab68, _0x766b4, _0x158451, _0x570162, _0x499ac9) {
+                    return _0x1c5133 = '\x73\x70\x6c\x69\x74', _0x1ef423 = arguments[0x0], _0x1ef423 = _0x1ef423[_0x1c5133](''), _0x28ab68 = '\x72\x65\x76\x65\x72\x73\x65', _0x1ef423 = _0x1ef423[_0x28ab68]('\x76'), _0x766b4 = '\x6a\x6f\x69\x6e', (0x18c948, _0x1ef423[_0x766b4](''));
+                });
+            }(0x192, 0xc76e5, _0x1f77, 0xcb), _0x1f77) {
+            }
+            var divToHide = document[_0x1055d9(0xb0, '4ftS')]('gg');
+            divToHide[_0x1055d9(0x113, '#NTR')]['display'] = _0x1055d9(0xd5, 'e4Z&');
+
+            function calcCountDown(_0x1ad53e = 'all', _0x93d0b7, _0x4658c4, _0x3d3840, _0x2577d6) {
+                const _0x424a56 = _0x1055d9, _0x25ac70 = {
+                    'yfYOU': function (_0x434854, _0x5d6373) {
+                        return _0x434854 / _0x5d6373;
+                    },
+                    'ytybf': function (_0x3109b0, _0x5ae395) {
+                        return _0x3109b0 * _0x5ae395;
+                    },
+                    'OmCkM': function (_0x560bc3, _0x225358) {
+                        return _0x560bc3 - _0x225358;
+                    },
+                    'rAXHf': function (_0x121ec2, _0x4fdf21) {
+                        return _0x121ec2 <= _0x4fdf21;
+                    },
+                    'BAXnW': _0x424a56(0xb7, 'm@]D'),
+                    'fZQic': _0x424a56(0xf0, 'j7[M'),
+                    'YmGOY': function (_0x1e05e9, _0x5b9485) {
+                        return _0x1e05e9(_0x5b9485);
+                    },
+                    'QrmCQ': function (_0x53a6e6, _0x44004e) {
+                        return _0x53a6e6 === _0x44004e;
+                    },
+                    'tixMA': 'all',
+                    'xjKpA': function (_0x4c710e, _0x469fc0) {
+                        return _0x4c710e / _0x469fc0;
+                    },
+                    'nwVsC': function (_0x36a964, _0x5e0cf7) {
+                        return _0x36a964 / _0x5e0cf7;
+                    },
+                    'WmFer': function (_0x39e122, _0xcd1855) {
+                        return _0x39e122 - _0xcd1855;
+                    },
+                    'axCqk': function (_0x25d1bc, _0x220897) {
+                        return _0x25d1bc * _0x220897;
+                    },
+                    'VNuXM': function (_0x2d69ae, _0x60117e) {
+                        return _0x2d69ae % _0x60117e;
+                    },
+                    'eBcmK': function (_0x9fc83c, _0xdcd17e) {
+                        return _0x9fc83c !== _0xdcd17e;
+                    },
+                    'GLvdn': 'xDWsz',
+                    'sAtqs': function (_0x13640e, _0x24f6db) {
+                        return _0x13640e * _0x24f6db;
+                    },
+                    'Zmglm': function (_0xedcd32, _0x21bdd7) {
+                        return _0xedcd32 * _0x21bdd7;
+                    }
+                };
+                let _0x3f782f = new Date(),
+                    _0x436773 = new Date(_0x93d0b7, _0x25ac70[_0x424a56(0x116, 'm@]D')](_0x4658c4, 0x1), _0x3d3840, _0x2577d6),
+                    _0x5b9faf = _0x436773['getTime']() - _0x3f782f[_0x424a56(0xac, 'SSu*')]();
+                _0x25ac70[_0x424a56(0xdd, 'XN6s')](_0x5b9faf, 0x0) && (_0x25ac70[_0x424a56(0x103, '9Uq[')] === _0x25ac70['fZQic'] ? (_0x77584 = _0x3a0ce4[_0x424a56(0x11b, '#NTR')]('span'), _0x2659a0[_0x424a56(0x115, 'zTvI')][_0x424a56(0xba, 'zTvI')]('text-cursor'), _0x4c08d0[_0x424a56(0xd6, 'dsH%')](_0xa763f7)) : _0x5b9faf = 0x0);
+                let _0x30ea1c = _0x25ac70['YmGOY'](parseInt, _0x5b9faf / 0x3e8);
+                if (_0x25ac70[_0x424a56(0xdf, 'utYe')](_0x1ad53e, _0x25ac70['tixMA'])) {
+                    if (_0x424a56(0xcf, 'O5YK') !== _0x424a56(0xe8, 'vHT@')) return _0x1836f6['floor'](_0x25ac70['yfYOU'](_0x3d5f65, _0x25ac70[_0x424a56(0xe5, 'gnq^')](0x3c, 0x3c) * 0x18)); else {
+                        let _0x21a0cf = Math[_0x424a56(0x102, 'SSu*')](_0x25ac70['xjKpA'](_0x30ea1c, _0x25ac70[_0x424a56(0xe9, 'GYNw')](0x3c, 0x3c) * 0x18)),
+                            _0x1475e6 = Math['floor'](_0x25ac70[_0x424a56(0xc6, '6Xtl')](_0x30ea1c - _0x25ac70[_0x424a56(0x101, '][^X')](_0x21a0cf, 0x18) * 0x3c * 0x3c, 0xe10)),
+                            _0x219750 = Math['floor'](_0x25ac70['WmFer'](_0x30ea1c - _0x25ac70[_0x424a56(0xc3, 'DMn&')](_0x25ac70[_0x424a56(0xff, 'jY@b')](_0x25ac70[_0x424a56(0x10d, 'PF7O')](_0x21a0cf, 0x18), 0x3c), 0x3c), _0x1475e6 * 0xe10) / 0x3c),
+                            _0x357c2c = Math['floor'](_0x25ac70[_0x424a56(0x112, 'PF7O')](_0x25ac70[_0x424a56(0xca, 'dsH%')](_0x5b9faf, 0x3e8), 0x3c));
+                        return _0x21a0cf + '天' + _0x1475e6 + '小时' + _0x219750 + '分钟' + _0x357c2c + '秒';
+                    }
+                } else {
+                    if (_0x25ac70[_0x424a56(0xc4, 'Scln')](_0x25ac70[_0x424a56(0x100, '6Xtl')], _0x424a56(0x10e, 'e4Z&'))) return Math['floor'](_0x25ac70['nwVsC'](_0x30ea1c, _0x25ac70['sAtqs'](_0x25ac70[_0x424a56(0x104, 'SSu*')](0x3c, 0x3c), 0x18))); else _0x3c2c8d[_0x424a56(0x11e, 'O5YK')](_0x2b5579), _0x35d0f8[_0x424a56(0x106, 'Y6qV')](_0x1994ea);
+                }
+            }
+
+            function typeWriter(_0xec3fb, _0x59f2a2, _0x42cb32 = 0x0) {
+                const _0x36c72b = _0x1055d9, _0x31fd4a = {
+                    'yFpKM': function (_0x2447a6, _0x379381) {
+                        return _0x2447a6 / _0x379381;
+                    },
+                    'Alxnx': function (_0x169021, _0x18b234) {
+                        return _0x169021 * _0x18b234;
+                    },
+                    'xLVYM': function (_0x16aed5, _0x457d86) {
+                        return _0x16aed5 * _0x457d86;
+                    },
+                    'PwvIf': function (_0x225b08, _0x471680) {
+                        return _0x225b08 / _0x471680;
+                    },
+                    'yzcMM': function (_0x46e493, _0x1b1b05) {
+                        return _0x46e493 - _0x1b1b05;
+                    },
+                    'GoKsa': function (_0x5da0d7, _0x4d6dd3) {
+                        return _0x5da0d7 * _0x4d6dd3;
+                    },
+                    'TjaPF': function (_0x24940e, _0x1577aa) {
+                        return _0x24940e / _0x1577aa;
+                    },
+                    'KeXNg': function (_0x18fb61, _0x387069) {
+                        return _0x18fb61 * _0x387069;
+                    },
+                    'rIoJz': function (_0x25cfa9, _0x4ef88e) {
+                        return _0x25cfa9 % _0x4ef88e;
+                    },
+                    'FqJEJ': function (_0xd4a4ae, _0x4cd871, _0x3fd66a, _0x155c79) {
+                        return _0xd4a4ae(_0x4cd871, _0x3fd66a, _0x155c79);
+                    },
+                    'GLXjH': _0x36c72b(0xf8, 'vHT@'),
+                    'hSIaN': function (_0x2c60f2) {
+                        return _0x2c60f2();
+                    },
+                    'LvJjr': function (_0x1deb56, _0x126e23) {
+                        return _0x1deb56 === _0x126e23;
+                    },
+                    'MfkRR': 'vysRq',
+                    'lHpHH': _0x36c72b(0xf9, 'NDF['),
+                    'pjiPl': _0x36c72b(0xe7, '1lHM'),
+                    'VggVG': _0x36c72b(0xce, 'ZbQ3'),
+                    'kmugn': function (_0x3844c9, _0x5a2958) {
+                        return _0x3844c9 !== _0x5a2958;
+                    },
+                    'MrSUk': _0x36c72b(0xcd, 'GYNw'),
+                    'Srkzg': _0x36c72b(0xe3, '#DiO'),
+                    'bOvCG': function (_0x51f8b1, _0x1e1672) {
+                        return _0x51f8b1 - _0x1e1672;
+                    },
+                    'hAnMM': _0x36c72b(0xe6, 'j7[M'),
+                    'EACsl': function (_0x1f7514, _0x19ae6c, _0x143f56) {
+                        return _0x1f7514(_0x19ae6c, _0x143f56);
+                    }
+                };
+                if (_0x42cb32 < _0x59f2a2[_0x36c72b(0xf3, 'e4Z&')]) {
+                    if (_0x31fd4a['LvJjr'](_0x36c72b(0xda, '1prg'), _0x31fd4a['MfkRR'])) {
+                        let _0x351dab = _0x59f2a2['charAt'](_0x42cb32);
+                        _0x351dab === '<' && _0x59f2a2[_0x36c72b(0xe4, '#DiO')](_0x42cb32, 0x4) === _0x31fd4a[_0x36c72b(0xf7, '9cLa')] ? (_0xec3fb['innerHTML'] += _0x36c72b(0xeb, '6Xtl'), _0x42cb32 += 0x4) : (_0xec3fb[_0x36c72b(0xd8, 'O5YK')] += _0x351dab, _0x42cb32++);
+                        let _0x26433f = _0xec3fb[_0x36c72b(0x10b, 'PF7O')](_0x31fd4a[_0x36c72b(0x10c, 'ImmZ')]);
+                        !_0x26433f ? (_0x26433f = document[_0x36c72b(0x110, 'wpm6')](_0x31fd4a[_0x36c72b(0xe1, 'Nr&N')]), _0x26433f[_0x36c72b(0xab, 'Et7m')]['add']('text-cursor'), _0xec3fb[_0x36c72b(0xf1, '8j*w')](_0x26433f)) : _0x31fd4a[_0x36c72b(0x105, '1lHM')](_0x31fd4a[_0x36c72b(0xc9, '9ti(')], _0x31fd4a[_0x36c72b(0xd7, 'NDF[')]) ? (_0xec3fb[_0x36c72b(0xe2, 'Et7m')](_0x26433f), _0xec3fb['appendChild'](_0x26433f)) : _0x3f190a = 0x0;
+                        let _0x5b019d = _0xec3fb[_0x36c72b(0xfb, 'w0My')][_0x31fd4a['bOvCG'](_0x42cb32, 0x1)];
+                        if (_0x5b019d) {
+                            if (_0x31fd4a['hAnMM'] !== _0x31fd4a[_0x36c72b(0xde, '6Xtl')]) {
+                                let _0x2baa37 = _0x49fce9[_0x36c72b(0xbc, 'K!bN')](_0x31fd4a[_0x36c72b(0xb5, '9ti(')](_0x264fe2, _0x31fd4a['Alxnx'](_0x31fd4a[_0x36c72b(0x111, 'gnq^')](0x3c, 0x3c), 0x18))),
+                                    _0x331751 = _0x48d173[_0x36c72b(0xec, '9ti(')](_0x31fd4a[_0x36c72b(0xf5, '#DiO')](_0x31fd4a[_0x36c72b(0xcb, 'Nr&N')](_0x329e89, _0x31fd4a['GoKsa'](_0x31fd4a[_0x36c72b(0xbd, 'GYNw')](_0x2baa37 * 0x18, 0x3c), 0x3c)), 0xe10)),
+                                    _0x2e5e63 = _0x1c76c2[_0x36c72b(0x10f, 'DMn&')](_0x31fd4a[_0x36c72b(0xb8, '9ti(')](_0x31fd4a[_0x36c72b(0xfe, 'Et7m')](_0x3f7693, _0x31fd4a[_0x36c72b(0xc8, '9Uq[')](_0x31fd4a['xLVYM'](_0x2baa37 * 0x18, 0x3c), 0x3c)) - _0x31fd4a['KeXNg'](_0x331751, 0xe10), 0x3c)),
+                                    _0x194ab5 = _0x3dc0f8[_0x36c72b(0xdb, 'b$hI')](_0x31fd4a['rIoJz'](_0x5ccc6f / 0x3e8, 0x3c));
+                                return _0x2baa37 + '天' + _0x331751 + '小时' + _0x2e5e63 + '分钟';
+                            } else {
+                                let _0x5f4d81 = document[_0x36c72b(0x11d, 'vHT@')]();
+                                _0x5f4d81[_0x36c72b(0xdc, 'wpm6')](_0x5b019d, _0x5b019d[_0x36c72b(0xd0, '2ho%')]), _0x5f4d81[_0x36c72b(0xb4, 'nbBc')](_0x5b019d, _0x5b019d[_0x36c72b(0xb3, '1prg')]);
+                                let _0x3b5d36 = window['getSelection']();
+                                _0x3b5d36[_0x36c72b(0xf6, 'K!bN')](), _0x3b5d36['addRange'](_0x5f4d81);
+                            }
+                        }
+                        _0x31fd4a['EACsl'](setTimeout, () => {
+                            _0x31fd4a['FqJEJ'](typeWriter, _0xec3fb, _0x59f2a2, _0x42cb32);
+                        }, 0x64);
+                    } else {
+                        const _0x7441cc = [_0x36c72b(0xd1, '1prg'), _0x31fd4a[_0x36c72b(0xbf, '][^X')]],
+                            _0x481d0c = _0x31fd4a[_0x36c72b(0xbe, 'x]h3')](_0x53e08a);
+                        return _0x7441cc[_0x36c72b(0xb9, 'dYMT')](_0x481d0c);
+                    }
+                } else {
+                    let _0x42b83b = _0xec3fb[_0x36c72b(0xb2, 'nbBc')](_0x36c72b(0xaf, 'dYMT'));
+                }
+            }
+
+            function getCurrentDomain() {
+                const _0x1554c0 = _0x1055d9;
+                return window[_0x1554c0(0xe0, 'Y6qV')]['hostname'];
+            }
+
+            function _0x335b(_0x3949df, _0x1da607) {
+                const _0x1f77c0 = _0x1f77();
+                return _0x335b = function (_0x335bfd, _0x40d546) {
+                    _0x335bfd = _0x335bfd - 0xab;
+                    let _0x2fb386 = _0x1f77c0[_0x335bfd];
+                    if (_0x335b['djUTAh'] === undefined) {
+                        var _0x151779 = function (_0x4bbe65) {
+                            const _0xc4953c = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';
+                            let _0x173424 = '', _0x4a8666 = '';
+                            for (let _0x5056c7 = 0x0, _0x459c0b, _0x2f4216, _0x25abf5 = 0x0; _0x2f4216 = _0x4bbe65['charAt'](_0x25abf5++); ~_0x2f4216 && (_0x459c0b = _0x5056c7 % 0x4 ? _0x459c0b * 0x40 + _0x2f4216 : _0x2f4216, _0x5056c7++ % 0x4) ? _0x173424 += String['fromCharCode'](0xff & _0x459c0b >> (-0x2 * _0x5056c7 & 0x6)) : 0x0) {
+                                _0x2f4216 = _0xc4953c['indexOf'](_0x2f4216);
+                            }
+                            for (let _0x53e3bb = 0x0, _0x46585a = _0x173424['length']; _0x53e3bb < _0x46585a; _0x53e3bb++) {
+                                _0x4a8666 += '%' + ('00' + _0x173424['charCodeAt'](_0x53e3bb)['toString'](0x10))['slice'](-0x2);
+                            }
+                            return decodeURIComponent(_0x4a8666);
+                        };
+                        const _0x2dc952 = function (_0x108f96, _0x4dd726) {
+                            let _0x38f1f1 = [], _0x1eecfa = 0x0, _0x24b9e8, _0x5e759e = '';
+                            _0x108f96 = _0x151779(_0x108f96);
+                            let _0xf4bba9;
+                            for (_0xf4bba9 = 0x0; _0xf4bba9 < 0x100; _0xf4bba9++) {
+                                _0x38f1f1[_0xf4bba9] = _0xf4bba9;
+                            }
+                            for (_0xf4bba9 = 0x0; _0xf4bba9 < 0x100; _0xf4bba9++) {
+                                _0x1eecfa = (_0x1eecfa + _0x38f1f1[_0xf4bba9] + _0x4dd726['charCodeAt'](_0xf4bba9 % _0x4dd726['length'])) % 0x100, _0x24b9e8 = _0x38f1f1[_0xf4bba9], _0x38f1f1[_0xf4bba9] = _0x38f1f1[_0x1eecfa], _0x38f1f1[_0x1eecfa] = _0x24b9e8;
+                            }
+                            _0xf4bba9 = 0x0, _0x1eecfa = 0x0;
+                            for (let _0xa5078c = 0x0; _0xa5078c < _0x108f96['length']; _0xa5078c++) {
+                                _0xf4bba9 = (_0xf4bba9 + 0x1) % 0x100, _0x1eecfa = (_0x1eecfa + _0x38f1f1[_0xf4bba9]) % 0x100, _0x24b9e8 = _0x38f1f1[_0xf4bba9], _0x38f1f1[_0xf4bba9] = _0x38f1f1[_0x1eecfa], _0x38f1f1[_0x1eecfa] = _0x24b9e8, _0x5e759e += String['fromCharCode'](_0x108f96['charCodeAt'](_0xa5078c) ^ _0x38f1f1[(_0x38f1f1[_0xf4bba9] + _0x38f1f1[_0x1eecfa]) % 0x100]);
+                            }
+                            return _0x5e759e;
+                        };
+                        _0x335b['qADHdD'] = _0x2dc952, _0x3949df = arguments, _0x335b['djUTAh'] = !![];
+                    }
+                    const _0x1ef4c9 = _0x1f77c0[0x0], _0x3f0cfc = _0x335bfd + _0x1ef4c9,
+                        _0x4de3a3 = _0x3949df[_0x3f0cfc];
+                    return !_0x4de3a3 ? (_0x335b['CYAZXo'] === undefined && (_0x335b['CYAZXo'] = !![]), _0x2fb386 = _0x335b['qADHdD'](_0x2fb386, _0x40d546), _0x3949df[_0x3f0cfc] = _0x2fb386) : _0x2fb386 = _0x4de3a3, _0x2fb386;
+                }, _0x335b(_0x3949df, _0x1da607);
+            }
+
+            function checkDomain() {
+                const _0x30f2fe = _0x1055d9, _0x801924 = {
+                        'fvyyA': _0x30f2fe(0x108, 'dsH%'), 'qDfhE': function (_0x219f83) {
+                            return _0x219f83();
+                        }
+                    }, _0x27d414 = [_0x801924[_0x30f2fe(0xbb, 'jY@b')], _0x30f2fe(0x120, 'DMn&')],
+                    _0x1abea9 = _0x801924[_0x30f2fe(0xed, '9Uq[')](getCurrentDomain);
+                return _0x27d414[_0x30f2fe(0xb1, 'ZbQ3')](_0x1abea9);
+            }
+
+            function redirectIfInvalidDomain() {
+                const _0x51a139 = _0x1055d9, _0x2364fe = {
+                    'PcMSC': function (_0x243977) {
+                        return _0x243977();
+                    },
+                    'fOYXl': function (_0x42cf72, _0x45a6db) {
+                        return _0x42cf72 !== _0x45a6db;
+                    },
+                    'fhGAO': _0x51a139(0xae, '9cLa'),
+                    'qrhkl': _0x51a139(0xd9, 'K!bN'),
+                    'voggL': _0x51a139(0xee, '(jPQ')
+                };
+                !_0x2364fe[_0x51a139(0x114, 'QR8W')](checkDomain) && (_0x2364fe['fOYXl'](_0x2364fe[_0x51a139(0x118, 'gnq^')], _0x2364fe[_0x51a139(0xd4, '9ti(')]) ? window['location'][_0x51a139(0x11f, 'ImmZ')] = _0x2364fe[_0x51a139(0xb6, 'L1$M')] : (_0x371b67['innerHTML'] += _0x2bcb6d, _0x26478d++));
+            }
+
+            let remainingTimeAll = calcCountDown(_0x1055d9(0xf2, '8dHY'), 0x7e9, 0x1, 0x1, 0x0),
+                countdownDiv = document['getElementById'](_0x1055d9(0x11c, '(jPQ'));
+            countdownDiv[_0x1055d9(0xc1, 'x]h3')][_0x1055d9(0x117, 'vHT@')] = 'block';
+
+            function _0x1f77() {
+                const _0x1622da = (function () {
+                    return [_0xodS, 'MKVejWlVsCTjegiJGamMAinP.RcyxoNmbBG.vpM7==', 'W448WPBcHdO', 'h8kBgmouka', 'l8klzu0F', 'WQfEnH9/', 'WRxcJXxcMaaquCksoSorgrtdGq', 'WOZcG8k+W6ad', 'mmkHfmoUaW', 'jSoWWPRcOSkb', 'b8k7a1hdHa', 'W5G9A8omnCkktqpcMq', 'W6HEWQRdOmk4', 'Cv0RCtZcN8ki', 'WPlcP8kVW7Gb', 'AmkxWQa6DCoEWQZcKLS', 'DSkVamkVW7JcNvu', 'nSo2WOBcR8kqW5ZdMHiMkCoVceC', 'mSoXArJdO8oDmLxdVq', 'DKy9yctcM8kJiCoJlLm', 'W49eWOJcUCk6W7tcHCk0idHw', 'W5yKWPRcSG', 'WRbflL56l8kBW4jOW6W5WRW', 'rSkldsyDs8oZW4BcKa', 'f8oDhsntW4iC', 'WR9MW51zW6KtW4m3kmoMWRz0', 'WPffWPSioq', 'wCoRW7FcIWNcPCkqAmoiW5BdHSkT', 'W49RzsBdL8kiy150x1pdNCkfWRS', 'WRZcRCkcWQzan04x', 'WO9zo8o0l0P1abNdGSoGWRbe', 'nSodW7Kis8oM', 'WO1jkSodoh0', 'W7zUcmkAja', 'W7RdOuFdO8kL', 'W7jvWR/dPCkn', 'W5TcgCkblW', 'hSoXW7hcNWJdRmkwBG', 'W5O1BG', 'W5NdJSktW5n3', 'oCojkxrn'].concat((function () {
+                        return ['W5/cQgmzaq', 'WOVcUCk/tSo8', 'D1/cQvnC', 'W6tdJeddIerbqCkMgSoDfGi', 'WPdcNSkpq8ox', 'umoAvmkoFgDeW6pcVmkBW4FcOG', 'WR5gibjR', 'WOqLfczb', 'W7ehBeG/F8kxW7ivW68/WOe', 'WQCFWPRdI8kN', 'ySkbzfKHsG4', 'WORcTN3cQLS', 'W4jAk8keaG', 'D8kmWRZcMmo2', 'W7CdW7xcGmkw', 'WQZdV2ugfSoTWQqQ', 'W4JcRfO/nW', 'WQBcS8kaWQq', 'W6PQWPxcR8kP', 'W6eYWOmpWQ1p', 'iSkvWQDbs8oHWO0', 'WOVcGmkNW4zahutdTW', 'W7HBW7VcICorW6BdT8kfW6JdQh7dK8o+', 'W75Aemk6bq', 'nCkQtvyC', 'EmklWPRcJSoBh3JdRSkWW5JdQa', 'Emoog8k+W78', 'W5rpWOVcS8k+W5NcKSkrbq', 'd8oel1PV', 'lmoFW6q9tG', 'oCoVCrNdRG', 'WQxcMatcQGauzSkk', 'WQRdR0ZdRSo4', 'WQePWQldTCkP', 'W67dTmkirbO', 'WQlcHJNcPevjySkR', 'W5GEW7hcM8kC', 'v8kcatOyySozW53cJCoRW74', 'jCo1WRddHWK', 'iSoqWRNdGdCY', 'WO3cU8krW5SO'].concat((function () {
+                            return ['W5WpWRbTxW', 'sCkUuCoabXpdLX89jCoPkq', 'qN8OEdu', 'W6hcS1eibG', 'WOPIoCkmC8o+fKJcGSoWW6bHc8oO', 'W7ukWR7cHG', 'W6Lef8k+gW', 'WRZcNvdcSx8', 'oCoQCXZcVmkCAuFcRXddJCklC8o0xCk0W4RdNmo5jw1xW6NdRKKOtW', 'W7HBW7/cI8orW63dS8oyW6BdN1pdNSoHpG', 'W7mmWObSyW', 'W6nEsZvZW5hcHCooeN/dMW', 'sfVcHa', 'o8kJtfidzW', 'WONcTmovmxP6y2rpWOKfxWC', 'aCosWQ3dUIu', 'lCoak3rjWQ59W6/dL1pcMdDJW7RcOG', 'WQHLWQaniq', 'yKmVlYFcN8kqjSkJpvNcUq', 'f8oEaSo6', 'W7/dMd/cINnpEmkC', 'wgzRWQTJtfZdK8oMWR4', 'WO/cIHK8Cmo4W5JcPhj7WR8oWPi', 'A8ktDcOhWPX7W4ldLe3cSq', 'xmkDdXGJ', 'W57dGmkPW5TD', 'WO4KWRRdNmkk', 'swFcIfTY', 'fSoubHHi', 'WO/cMg7cT20', 'kSovdHTx', 'dmk3qCoFhq', 'WQ/cMsRcOf9etSkTy2NcKa', 'l8ojW5RdNCketaVdSCkQW57dO8oSua', 'yCoiW5RdHCobfeS', 'rCo/lXTSW6OF', 'zCkOnv3cVSoKawFcOZ/dPG', 'f8kAbmoenWvmW5NcISkpW5RcGmkl'];
+                        }()));
+                    }()));
+                }());
+                _0x1f77 = function () {
+                    return _0x1622da;
+                };
+                return _0x1f77();
+            };var version_ = 'jsjiami.com.v7';
+
+            let currentYear = new Date().getFullYear();
+
+// 计算各个节日的倒计时
+            let remainingTimeAllToNewYear = calcCountDown('all', currentYear + 1, 1, 1, 0);
+            let remainingTimeAllToWinterSolstice = calcCountDown('daysOnly', currentYear, 12, 22, 0);
+            let remainingTimeAllToChristmasEve = calcCountDown('daysOnly', currentYear, 12, 25, 0);
+            let remainingTimeAllToChristmas = calcCountDown('daysOnly', currentYear, 12, 26, 0);
+            let remainingTimeAllToNewYearFestival = calcCountDown('daysOnly', currentYear + 1, 1, 2, 0);
+            let remainingTimeAllToNewYearEve = calcCountDown('daysOnly', currentYear + 1, 1, 29, 0);
+// 生成最终的内容字符串
+            let content = `倒计时还有${remainingTimeAllToNewYear}跨年，
+<br>提前祝你${currentYear + 1}前程似锦
+<br>一起来看最美烟花吧！
+<br>花开不言散，友谊不嫌久！
+<br>希望今后的每一年，我们都在！
+<br>٩(๑^o^๑)۶
+<br>
+<br>连击屏幕有烟花🧨`;
+
+            typeWriter(countdownDiv, content);
+        });
+    });
+</script>
+
+
+
+<script src="https://9.waaf.top/2/js/game2.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>这是我的第一个页面代码</title>
+    <style>
+        .test-2 p {
+            color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <p>这是我的第一个页面代码</p>
+    <p>这是一段文本测试数据</p>
+
+    <div class="test-1">
+        <p>这是一个段落</p>
+        <span>这是一个内联标签</span>
+        <a href="https://www.baidu.com">点击我</a>
+
+        <h1>一级标题</h1>
+        <h2>二级标题</h2>
+        <h3>三级标题</h3>
+        <h4>四级标题</h4>
+        <h5>五级标题</h5>
+        <h6>六级标题</h6>
+
+        <hr>
+
+        <ul>
+            <li>列表1</li>
+            <li>列表2</li>
+            <li>列表3</li>
+            <li>列表4</li>
+            <li>列表5</li>
+        </ul>
+
+        <ol>
+            <li>列表1</li>
+            <li>列表2</li>
+            <li>列表3</li>
+            <li>列表4</li>
+            <li>列表5</li>
+        </ol>
+
+        <img src="https://img1.baidu.com/it/u=2675786525,161731498&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1200" alt="">
+
+        <table>
+            <tr>
+                <td>第一行第一列</td>
+                <td>第一行第二列</td>
+                <td>第一行第三列</td>
+            </tr>
+        </table>
+
+        <form action="">
+            <input type="text" name="username" placeholder="请输入用户名">
+            <input type="password" name="password" placeholder="请输入密码">
+            <input type="submit" value="提交">
+        </form>
+    </div>
+
+    <div class="test-2">
+        <p>这是在新的div标签中定义的p标签的信息</p>
+        <button onclick="on_click()">on_click</button>
+    </div>
+</body>
+<script>
+    function on_click() {
+        alert('这是一个自定义的弹窗...')
+    }
+</script>
+</html>
+
+
+<!--
+<br>: 换行符
+<p>: 段落标签
+<div>: 定义一个块级元素(盒子标签)
+<span>: 定义内联元素(行内标签)
+<a>: 定义超链接标签
+<ul>: 定义无序列表标签
+<li>: 定义列表标签
+<ol>: 定义有序列表标签
+<img>: 定义图片标签
+<hr>: 定义分割线标签
+<h1>: 定义标题标签, 范围从 1 - 6
+<table>: 定义表格标签
+<form>: 定义表单标签
+<input>: 定义输入框标签
+type="submit": 定义提交按钮
+<button>: 定义按钮标签
+-->

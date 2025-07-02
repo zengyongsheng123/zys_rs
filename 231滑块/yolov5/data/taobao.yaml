@@ -1,0 +1,91 @@
+# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
+# COCO 2017 dataset http://cocodataset.org by Microsoft
+# Example usage: python train.py --data coco.yaml
+# parent
+# ├── yolov5
+# └── datasets
+#     └── coco  ← downloads here (20.1 GB)
+
+
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+#path: ./data  # dataset root dir
+train: C:/Users/Administrator/Desktop/bz/images/train  # train images (relative to 'path') 118287 images
+val: C:/Users/Administrator/Desktop/bz/images/val # val images (relative to 'path') 5000 images
+
+nc: 69
+# Classes
+names:
+  0: 包
+  1: 鞋
+  2: 伞
+  3: 闹钟
+  4: 电话
+  5: 耳机
+  6: 足球
+  7: 气球
+  8: 挂锁
+  9: 枕头
+  10: 裙子
+  11: 杯子
+  12: 椅子
+  13: 帽子
+  14: 瓶子
+  15: 房子
+  16: 篮子
+  17: 花盆
+  18: 皇冠
+  19: 吉他
+  20: 帐篷
+  21: 车
+  22: 轮胎
+  23: 挖掘机
+  24: 蛋糕
+  25: 南瓜
+  26: 草莓
+  27: 蘑菇
+  28: 苹果
+  29: 菠萝
+  30: 冰淇淋
+  31: 汉堡包
+  32: 向日葵
+  33: 玫瑰花
+  34: 树
+  35: 鱼
+  36: 马
+  37: 鸟
+  38: 瓢虫
+  39: 蝴蝶
+  40: 松鼠
+  41: 熊猫
+  42: 兔子
+  43: 鸭子
+  44: 乌龟
+  45: 考拉
+  46: 企鹅
+  47: 大象
+  48: 宇航员
+  49: 未知
+  50: 桃子
+  51: 连衣裙
+  52: 冰激凌
+  53: 圣诞树
+  54: 凤梨
+  55: 树袋熊
+  56: 铲土机
+  57: 鞋子
+  58: 老鼠
+  59: 什熊猫
+  60: 汽车
+  61: 你南瓜
+  62: 胖子
+  63: 伞、
+  64: 今天
+  65: 募股
+  66: 汉堡包、
+  67: 篮仔
+  68: 熊猫、
+  69: 太阳花
+
+
+# Download script/URL (optional)
+download:  

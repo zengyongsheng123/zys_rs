@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="481eff83-5477-443a-8b1f-59aced41fac3" name="zys" url="http://192.168.2.15">
+        <fileTransfer rootFolder="/opt/antiEnv/AntiSpider" accessType="SFTP" host="192.168.2.15" port="22" sshConfigId="89651d40-eb78-478a-bbc2-89dfd2257997" sshConfig="root@192.168.2.15:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="1000" passiveMode="true" shareSSLContext="true" isUseRsync="true" isUseSudo="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

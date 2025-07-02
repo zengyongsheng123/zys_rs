@@ -1,0 +1,332 @@
+JS逆向
+    什么是js逆向
+        并不是破解
+
+    什么是js加密操作
+        加密方式
+            请求头加密
+            网址加密
+            cookie加密
+            响应数据加密
+            请求体加密
+            组合加密
+        js加密: 通过一些加密技术来保护数据的安全,对敏感数据进行防护
+
+    为什么要做数据加密
+        1.保护数据的传输安全
+        2.对客户端的数据保护
+        3.密码安全
+        4.数字签名安全认证
+        5.爬虫
+
+网页的代码   和 自己的node获取的代码有区别
+补环境
+    基础的环境内容
+补哪些环境
+    document   是网页的文档信息
+    frames     网址所用到的框架    vue
+    history    读取网址的历史记录
+    navigator  浏览器的配置信息
+    screen      浏览器屏幕的数据
+    location    会记录 网址内容
+    canvas      画布   标签
+
+
+抓包工具
+    源代码/来源
+        替换    讲原本访问服务器的数据   改成访问本地
+
+        代码展示   为什么是一坨     节省空间  传输数据快  不太好阅读代码    点击大括号   把代码美化输出
+
+    网络   获取网址与服务器交互的接口
+    应用   清除缓存 cookie
+    放大镜搜索    搜索的内容 是网络里面数据包的内容
+
+    设置里的搜索   搜索的是源文件    类似全局搜索
+
+断点按钮功能
+    第一个按钮    快速执行到下一个断点的位置
+    第二个按钮    执行代码     但是不会进入函数内部
+    第三个按钮    会进入函数的内部
+    第四个按钮    会到调用这个函数的位置
+
+网页数据的加载逻辑
+加载html - 加载js/css - 运行js代码  - 触发某一个事件   -- 调用js代码 -- 把明文密码进行加密   --  发送一个请求(xhr/ send)
+服务器接受数据 -- 效验账号密码是否正确   --  刷新页面进行渲染
+
+加密的数据  一定会赋值的过程
+    pwd      pwd =    'pwd':
+
+dom 断点
+    document事件断点  找加密的位置比较靠前
+    定位加密的位置
+
+xhr断点
+    xhr的含义    xmlhttprequest   ajax请求   是不是一定要是xhr  动态请求  必须是
+    检测网址发送xhr请求的时候  是否包含某个字符串      feapder   监听动态接口   https://oauth.d.cn/auth/goLogin.html
+    拦截字符串    一般是资源地址   接口唯一     查询字符串参数会变
+    https://oauth.d.cn/auth/login?display=web&name=1234346545&pwd=81f870e3862ab8c7009bd98dcf8345a7c7795de693511fc67f51b0538115b11ce4b61defaf091f0bd8df4d7ad63e351bd47d60c66bd33cb0350f8ca2599360a9cc055f7224f74354d14ae2ffbf37e3c2919ce05bbd68fd9ca6140d78574bae7fca7035d1cf3b8da8b7572d8cf3386bd779066ecbe956da7c2f119d84508495f0&to=https%3A%2F%2Fwww.d.cn%2F&reqId=gb7ntf6t4uoo3qopg9l7dho6shfff8si&geetest_challenge=f555618b4d302466bf6b45dee5c265d1&geetest_validate=fd7b1e47c522d84e839652421eaa1b1b&geetest_seccode=fd7b1e47c522d84e839652421eaa1b1b%7Cjordan
+
+    断点的位置   是在调用ajax send 的时候   断点的位置  比较靠后
+    往前找          往后找
+
+
+过断点的方式
+    鼠标右击行号
+        条件断点  让这一行条件不成立
+        鼠标右击   一路不在此处暂停
+
+    方法置空
+        在进入方法之前  可以下断点 把方法修改掉
+
+
+    替换文件
+        把debugger位置的文件给换成本地
+
+装饰器的作用
+hook
+    为什么要用hook??
+    能帮我们定位数据加密  或者解密的位置   能帮我们定位加密的一种手动
+
+    能过在其他函数执行执行之前  优先控制当前函数      这种行为我们叫做hook   钩子
+    执行的过程    触发方法之前  把方法进行修改    修改之后  不要去扰乱代码的原有逻辑    需要调用原本的方法
+
+响应数据加密
+    在js里面一定会有点 进行解密     解密完之后  也是字符串      json.parse()
+
+一般是异步出发拦截器
+
+拦截器不是没个请求都会触发
+
+网址加载格式
+加载html    --> 加载js代码  --> 触发请求接口(ajax) --> 构造一个请求对象 --> 请求拦截器  --> 发送请求 -->
+服务器返回数据 -->响应拦截器   --> ajax请求成功的处理
+
+execjs 调用异步代码会获取不到信息
+subprocess  可以获取到执行文件在终端输出的信息
+
+
+拦截器的作用
+    请求拦截
+    响应拦截
+
+开接口的方式
+execjs库调用     为什么能调用js代码     自己有一个环境
+sub  库获取 js内容    库的作用      终端执行内容
+
+
+dom 断点  通过标签触发的时间进行断点
+xhr 对发送xhr的进行断点   网址进行断点
+hook   在调用一个方法(属性)之前可以优先获取到控制权
+
+关键字搜索定位
+    为什么能通过关键字定位
+    analysis =
+    'analysis':
+    analysis:
+    an +  al + ys + is
+    混淆
+
+启动器定位加密位置
+    通过调用的方法和栈堆判断
+    可以帮助我们在搜索关键字的时候   排除非调用文件
+
+
+异步的执行代码
+    需要知道加密的数据   是异步前的代码    还是异步中间的代码
+    调试技巧
+        在异步之前下断点    通过第二个按钮 走一步执行的代码 走代码的过程中观察我们的数据是否已经加密好
+        发现大致的加密位置    重新下断点  在一步步执行   观察数据
+
+
+异步代码定位调用的方式
+    触发异步代码   我们处在的位置是.then的方法里面
+    异步触发的回调有很多个
+    我们加密的位置     就是在这个回调的方法里面
+    帮助我们定位到   所有回调的方法
+
+
+拦截器定位
+    猜测加密的数据有可能在请求拦截器里面完成   可以执行发送请求  去找到响应拦截器的代码   通过响应拦截器找请求拦截器
+    响应拦截器定位的速度会快
+    拦截器不是每个请求都有
+
+
+七麦代码分析
+    t[Jt] += '?' + "analysis" + "=" + "ew8nHiY7SQ16YgcUKiVwQSgMNhw1PRFBfHMyHSx9f1UqMylNNS50AXoZKRt3XDcMBQ9FRDoWHkUCCgoWWQMACwEWHDoWBwNRVlgIAl1RVFw4Wkk%3D"
+
+js调用
+
+function aa(){
+    console.log(123)
+}
+
+// 调用函数    逗号表达式    没有区别
+aa()
+(0, aa)()
+
+方法调用
+i = {
+    jt: function () {
+        console.log(123)
+    }
+}
+
+
+i['jt']()
+参数生成的值  需要刷新页面才能找到
+
+
+aa.setRequestHeader('键', '值')
+aa.headers['键'] = '值'
+aa.headers = {'键', '值'}
+
+console.log('abc'.substr(1, 3));
+console.log('abc'['substr'](1, 3));
+
+异或   相同为0   不同为1
+101010101101001101010
+010101010101010100101
+111111111000011001011
+
+
+(e = "{" == e[0] ? JSON.parse(e) : JSON.parse(webInstace.shell(e)))
+.Status || 200 == e.Code ? r(e.Data) : 200 == e.code ? r(e.data) : a(e.Msg)
+
+
+混淆代码    abc     _0xskdhfhjsdg
+
+js  中括号一样的可以执行代码
+
+
+环境
+
+
+扣代码
+    直接扣方法      针对性      代码体积小      知道执行代码的大致过
+    全扣       代码体积非常大    不需要关注他的过程    找到检测的环境
+
+
+AttributeError: 'NoneType' object has no attribute 'replace'
+UnicodeDecodeError: 'gbk' codec can't decode byte 0xa4 in position 1025: illegal multibyte sequence
+这个是因为js里面编码识别有问题
+    解决方法
+        导入execjs库之前  修改编码格式
+        # import subprocess
+        # from functools import partial
+        # subprocess.Popen = partial(subprocess.Popen, encoding="utf-8")
+
+        进入subprocess.py文件 搜索encoding=None   None 修改成 'utf-8'
+
+
+pip install urllib3==1.25.6
+
+
+加解密关键字
+    encrypt
+    decrypt
+
+报错
+    Malformed UTF-8 data
+    秘钥不对
+
+蜜罐
+    陷阱   假的数据
+
+测试哪些参数需要解析  哪些参数不需要解析
+    拿到请求代码   一个个参数注释完  看能不得到正常数据
+
+
+浏览器重放
+    可以判断  页面生成的数据请求的时候 是不是一次性的
+
+true
+? a.params = s ? {b: t,kiv: s} : a.data
+: "post" == a.method.toLowerCase() && "json" == a.requestType.toLowerCase() ?
+(a.headers["Content-Type"] = "application/json;charset=utf-8",s && (a.data = {b: t, kiv: s})) :
+a.data = s ? o().stringify({b: t,kiv: s}) :
+
+                o().stringify(a.data),
+
+
+定位
+    xhr   encrypt  hook
+
+this
+    self e()    = e
+
+    e 最上面的这个东西    创建实例的方法   类
+        定位方式   new
+
+    属性定位 this
+        通过属性名  最好比较特殊的属性名   要多下断点  排查
+
+    方法定位
+        Prototype   里面存放的是  父类的属性和方法
+        找到方法的  FunctionLocation   进入他的方法  看在哪里获取到的
+
+t          y
+7 4        7 9
+011101   000111   100100 000000
+29         7       37
+
+dHlw=
+
+
+非对称加密算法
+    公钥存放
+        固定在页面
+        秘钥变化    接口返回
+
+异步代码  调用过程
+    var i = A[a](s)
+    return this._invoke(t, e)
+    var l = d(e, t, n);   调用e方法 把 t和n当做参数传递
+
+    控制流的代码
+        在所有return的位置  下断点    定位那个代码返回的数据
+
+
+    异步的代码里面   又嵌套了一个异步
+    异步
+        嵌套了一个异步    返回了公钥
+        获取到公钥之后  有调用异步代码
+
+
+
+
+js
+    函数   类
+
+webpack
+    把js函数 类  进行整合    打包之后进行处理
+
+整体  自执行方法
+加载器
+    e[t].call(n)   有这个方法的是加载器
+模块
+    数组    对象
+
+加载器的函数   名字  一般  一个字符   n   f   跟上括号   传递的参数是数字  或者 字符串
+
+
+webpack解析过程
+
+定位加密的位置
+    看加密的方法/属性  是不是webpack加载的
+    定位到加载器     补上需要的模块
+
+
+webpack
+    接受模块的变量可能是写的   可能需要我们去手动修改入参
+
+
+result = '{'; for(let x of Object.keys(aaa)){result = result + '"' + x + '"' + ":" + aaa[x] + ','}; result = result + '}'
+
+
+
+
+
+
+
+

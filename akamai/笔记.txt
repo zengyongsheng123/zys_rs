@@ -1,0 +1,1 @@
+请求HTML页面地址生成响应cookie跟一个外链的js文件--->>对外链的js文件发送get请求生成一个cookie(_abck)---->>携带上响应的cookie，携带请求的载荷数据（sensor_data）对js文件发送post请求生成的cookie才可用

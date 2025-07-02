@@ -1,0 +1,29 @@
+加载流程
+    1.首先请求首页会带上两个ck
+        w_tsfp ===》这个暂时先放在这 等会再说
+        x-waf-captcha-referer ===》第一次请求首页返回
+        这两个ck是验证码弹出的开关
+        请求首页过后 会返回三个script标签
+         <script>
+            var seqid = "4a3bc75a081c56f758a696cb729a4dc28c2142ab784149d6647e02a0e11cb3d21903dd51bd7ad5dffeff00574763a5fa03a29ffc905b64909ef62ede38d9933f783b0bdf7b7177b7164cdb5e799276dc"
+        </script>
+        这个比较重要 其他两个是验证码的配置信息
+        这个seqid后面要用到
+
+        在返回的script标签中会包含外链的js文件 这些js文件有些是配置的文件 有些是获取验证码的接口
+
+        请求获取验证码的接口 获取到验证码图片 然后渲染到网页上面
+         拖动滑块进行验证码的验证
+         请求验证验证码的接口 进行验证 如果验证通过 会返回randstr titck这两个后面会用到
+
+         在我们请求验证接口之后 验证通过了 返回randstr和titck之后
+         会去请求https://www.mafengwo.cn/WafCaptcha这个接口 这个接口的作用是更新w_tsfp这个ck的值 使其让验证码的状态为不弹出
+         他的载荷里包含
+         0
+         titck
+         randstr
+         seqid
+         请求成功后 会响应w_tsfp这个ck
+         拿到这个ck去请求首页 最终得到数据
+
+         你说啥

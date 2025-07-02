@@ -1,0 +1,816 @@
+瑞数6某监局某期刊补环境详解
+瑞数4，5，6补环境介绍
+下面是瑞数六检测点详解及源码
+瑞数6检测点是在瑞数4和瑞数5基础上新增的，本文以瑞数6为例
+
+1. document.all 的检测
+检测方式：某些反爬系统会检查 document.all，因为早期的 Internet Explorer (IE) 有 document.all，但现代浏览器已经废弃。
+绕过方式：代码重新定义了 document.all，并且赋值了 length，模拟 IE 的行为，从而绕过检测。
+
+2. webdriver 属性检测
+检测方式：Selenium 会在 navigator.webdriver 设为 true，很多网站会检查 navigator.webdriver 是否存在且为 true 来判断是否是自动化浏览器。
+绕过方式：
+代码重写了 navigator.webdriver 的 getter 方法，让其始终返回 false，避免被检测到。
+还定义了 webdriver.toString，防止函数调用 toString() 时露馅。
+3. navigator 相关属性检测
+检测方式：一些网站会检查 navigator 的属性，如 navigator.languages、navigator.platform、navigator.hardwareConcurrency、navigator.deviceMemory、navigator.userAgent 等，以判断是否是虚拟环境或自动化工具。
+
+绕过方式：
+
+代码手动定义了 navigator，并且赋值了一些符合真实浏览器的数据，如 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) ...", "Win32", "Google Inc." 等等。
+navigator.languages 设为 ["zh-CN", "en", "zh"]，符合正常的中文用户习惯。
+4. window.chrome 检测
+检测方式：某些网站会检查 window.chrome 是否存在，因为 Chrome 浏览器的 window 对象里包含 chrome，而无头浏览器（如 Puppeteer 的 headless Chrome）没有这个属性。
+
+绕过方式：代码手动定义了 window.chrome = {}，避免被检测到是无头浏览器。
+
+5. MutationObserver 的检测
+检测方式：反爬虫系统可能会用 MutationObserver 来监测网页 DOM 是否被修改，因为自动化工具可能会篡改页面。
+绕过方式：
+代码定义了 window.MutationObserver，并且重写了 observe() 方法，让它不会真正起作用，但仍然存在，以欺骗检测系统。
+6. WebSocket 检测
+检测方式：某些网站会检查 window.WebSocket 是否存在，因为某些自动化工具可能会屏蔽 WebSocket。
+绕过方式：
+代码重写了 window.WebSocket，让其返回一个空对象，避免检测失败。
+7. navigator的 getBattery 方法检测
+检测方式：部分网站会调用 navigator.getBattery() 来获取电池信息，这个方法通常不会出现在无头浏览器中。
+绕过方式：
+代码提供了一个 navigator.getBattery() 方法，返回了一个 Promise 对象的 then() 方法，以模拟真实浏览器的行为。
+8.localStorage sessionStorage
+检测方式：部分网站会检查 localStorage 和 sessionStorage 是否可用，因为一些无头浏览器可能不支持它们，或者会出现 undefined。
+绕过方式：
+代码手动定义了 localStorage 和 sessionStorage，并添加了 setItem()、getItem()、removeItem() 方法，确保行为正常。
+9. indexedDB 检测
+检测方式：部分网站会检查 indexedDB 是否存在，以判断是否是正常浏览器。
+绕过方式：
+代码手动定义了 window.indexedDB，并实现了 open() 方法，返回 indexedDB，以模拟真实环境。
+10. document.createElement 检测
+检测方式：有些网站会用 document.createElement('canvas') 来检测 toDataURL() 或 getImageData() 是否被篡改，以防止 Canvas 指纹篡改。
+绕过方式：
+代码重写了 CanvasRenderingContext2D.prototype.getImageData，让其返回 function getImageData() { [native code] }，避免检测到 getImageData() 被修改。
+代码同样重写了 HTMLCanvasElement.prototype.toBlob 和 HTMLCanvasElement.prototype.toDataURL，让它们返回 function toBlob() { [native code] }，避免检测失败。
+11.setTimeout和 setInterval 检测
+检测方式：部分反爬虫机制会用 setTimeout() 或 setInterval() 观察执行间隔，以检测是否为自动化工具。
+绕过方式：
+代码将 window.setTimeout 和 window.setInterval 重新定义为 _null，避免执行额外的代码。
+12. window.XMLHttpRequest 检测
+检测方式：部分反爬虫系统会检查 window.XMLHttpRequest 是否可用，以判断是否是自动化工具。
+绕过方式：
+代码重写了 window.XMLHttpRequest，返回一个空对象，确保不会被检测到。
+13.window.fetch,window.Request检测
+检测方式：有些反爬虫机制会检测 window.fetch 和 window.Request，如果这些方法不存在或者返回异常，则可能是爬虫。
+绕过方式：
+代码重写了 window.fetch() 和 window.Request()，让它们返回一个空对象，避免检测失败。
+14.document.visibilityState 检测
+检测方式：有些反爬虫系统会检测 document.visibilityState，如果值为 "hidden"，可能意味着浏览器在后台运行，或者是无头浏览器。
+绕过方式：
+代码手动设定了 document.visibilityState = 'hidden'，但这个值可能需要动态调整，比如监听 visibilitychange 事件。
+15.window.top和window.self检测
+检测方式：部分网站会检查 window.top === window.self，如果 window.top 不等于 window.self，说明当前页面被嵌套在 iframe 里，可能是爬虫行为。
+绕过方式：
+代码直接设置了 window.top = window 和 window.self = window，确保检测通过。
+总结
+下面的补环境代码通过模拟浏览器环境，修改 document、window、navigator 等关键对象，绕过了多个检测点，包括但不限于：
+✅ document.all 的 IE 兼容检测
+
+✅ navigator.webdriver 反自动化检测
+
+✅ window.chrome 存在性检测
+
+✅ MutationObserver DOM 变化检测
+
+✅ WebSocket 连接检测
+
+✅ getBattery 设备信息检测
+
+✅ localStorage / sessionStorage 访问检测
+
+✅ indexedDB 可用性检测
+
+✅ CanvasRenderingContext2D 指纹检测
+
+✅ setTimeout 和 setInterval 时间检测
+
+✅ fetch 和 XMLHttpRequest API 访问检测
+
+✅ visibilityState 页面可见性检测
+
+✅ window.top / window.self 反 iframe 检测
+
+完整代码
+delete __dirname;
+delete __filename;
+
+window = global;
+
+delete global;
+
+Object.defineProperties(window, {
+    [Symbol.toStringTag]: {
+        value: 'Window',
+        configurable: true
+    }
+});
+
+l_obj = {
+
+};
+
+l_input = {
+
+};
+
+l2_input = {
+
+};
+
+l3_input = {
+
+};
+
+var form = {
+};
+
+form_action = '';
+
+Object.defineProperty(form, 'action',{
+    get() {
+        console.log('form->action.get--------->', l_input)
+        return l_input;
+    },
+    set(v) {
+        console.log('form->action.set--------->', v)
+        form_action = v;
+    }
+});
+
+form_textContent = {};
+
+Object.defineProperty(form, 'textContent',{
+    get() {
+        console.log('form->textContent.get--------->', l2_input)
+        return l2_input;
+    },
+    set(v) {
+        console.log('form->textContent.set--------->', v)
+        form_action = v;
+    }
+});
+
+form_id = '';
+
+Object.defineProperty(form, 'id',{
+    get() {
+        console.log('form->id.get--------->', l3_input)
+        return l3_input;
+    },
+    set(v) {
+        console.log('form->id.set--------->', v)
+        form_id = v;
+    }
+});
+
+form_innerText = '';
+
+Object.defineProperty(form, 'innerText',{
+    get() {
+        console.log('form->innerText.get--------->', l3_input)
+        return l3_input;
+    },
+    set(v) {
+        console.log('form->innerText.set--------->', v)
+        form_innerText = v;
+    }
+});
+
+
+a_labl = {
+    //去浏览器里拿
+    href: 'xxxxxxxxxxxxxx',
+    protocol: 'https:',
+    port: '',
+    //去浏览器里拿
+    hostname: 'xxxxxxxxxxxxxxx',
+    //去浏览器里拿
+    pathname: 'xxxxxxxxxxxxxxx'
+}
+
+window.HTMLAnchorElement = function (){};
+
+scripts = [
+                {
+                    type: "text/javascript",
+                    r: 'm',
+                    parentElement: {
+                        getAttribute: function(args) {
+                            console.log('head1->parentElement->getAttribute: ', args)
+                            console.log(arguments)
+                            debugger;
+                            if (args == 'r')
+                            {
+                                return 'm';
+                            }
+                        },
+                        getElementsByTagName: function(args) {
+                            console.log('head1->getElementsByTagName: ', args)
+                            console.log(arguments)
+                            debugger
+                        },
+                         removeChild: function (args) {
+                            console.log('head1->parentElement->removeChild', args);
+                            console.log(arguments);
+                            debugger;
+                        },
+                    },
+                    getAttribute: function(args) {
+                        console.log('script1->getAttribute: ', args)
+                        console.log(arguments)
+                        debugger;
+                        if (args == 'r')
+                        {
+                            return 'm';
+                        }
+                    }
+                },
+                {
+                    type: "text/javascript",
+                    r: 'm',
+                    parentElement: {
+                         getAttribute: function(args) {
+                            console.log('head2->parentElement->getAttribute: ', args);
+                            console.log(arguments);
+                            debugger;
+                        },
+                        getElementsByTagName: function(args) {
+                            console.log('head2->getElementsByTagName: ', args);
+                            console.log(arguments);
+                            debugger
+                        },
+                         removeChild: function (args) {
+                            console.log('head2->parentElement->removeChild', args);
+                            console.log(arguments);
+                            debugger;
+                        },
+                    },
+                    getAttribute: function(args) {
+                        console.log('script2->getAttribute: ', args);
+                        console.log(arguments);
+                        debugger;
+                        if (args == 'r')
+                        {
+                            return 'm';
+                        }
+                    },
+                    //去浏览器里拿
+                    src: "xxxxxxxxxx",
+                }
+            ]
+
+var input_count = 0;
+
+var l_meta = {
+        id: 'FbkwzLN5XOx0',
+        content: 'tyGGg5AdQlANmSX9z3xbpGEoEKVuG9rmj_VCz71ozkpQ9tph9oDZE2RjIwQz8iL5oWgiCSPtU67jWlcPgf7DyTWP8X_.29Z5B0y9OtqwW4e6THU9dqdapsjx4a81rlUo',
+        r: 'm',
+        getAttribute: function(args)
+        {
+             console.log('meta->getAttribute: ', args);
+             console.log(arguments);
+             debugger;
+             if (args == 'r')
+             {
+                return 'm';
+             }
+        },
+        parentNode: {
+             removeChild: function (args) {
+                console.log('meta->parentNode->removeChild', args)
+                debugger;
+                return {};
+            },
+        }
+}
+
+div_i = [];
+
+div = {
+    getElementsByTagName:function (args)
+    {
+        console.log('document->div->getElementsByTagName', args)
+        console.log(arguments)
+        debugger;
+        if(args === "i"){
+            return div_i;
+        }
+    }
+}
+
+doc_base = [
+
+]
+
+Document = function Document(){}
+
+Object.defineProperty(Document.prototype,'createElement',{
+    configurable: true,
+    enumerable: true,
+    value: function createElement(args) {
+        console.log('document->createElement', args)
+        console.log(arguments);
+        debugger;
+        if (args == 'div')
+        {
+            return div;
+        }
+        else if (args == 'form')
+        {
+            return form;
+        }
+        else if (args == 'input')
+        {
+            if (input_count == 0)
+            {
+                input_count++;
+                return l_input;
+            }
+            else if (input_count == 1)
+            {
+                input_count++;
+                return l2_input;
+            }
+            else if (input_count == 2)
+            {
+                return l3_input;
+            }
+        }
+        else if (args == 'a')
+        {
+            return a_labl;
+        }
+        else
+        {
+            return l_obj;
+        }
+    },
+    writable: true,
+})
+
+const v8 =require('v8');
+const vm= require('vm');
+v8.setFlagsFromString('--allow-natives-syntax');
+let undetectable = vm.runInThisContext("%GetUndetectable()");
+v8.setFlagsFromString('--no-allow-natives-syntax');
+
+Object.defineProperty(Document.prototype,'all',{
+    configurable: true,
+    enumerable: true,
+    value: undetectable,
+    writable: true,
+})
+
+Object.defineProperty(Document.prototype,'body',{
+    configurable: true,
+    enumerable: true,
+    value: null,
+    writable: true,
+})
+
+Object.defineProperty(Document.prototype,'visibilityState',{
+    configurable: true,
+    enumerable: true,
+    value: 'hidden',
+    writable: true,
+})
+
+Object.defineProperty(Document.prototype,'toString',{
+    configurable: true,
+    enumerable: true,
+    value: function toString() {return '[object HTMLDocument]';},
+    writable: true,
+})
+
+Object.defineProperty(Document.prototype,'addEventListener',{
+    configurable: true,
+    enumerable: true,
+    value: function addEventListener(args) {
+        console.log('document->addEventListener', args)
+        console.log(arguments);
+        debugger;
+        return {};
+    },
+    writable: true,
+})
+
+documentElement = {};
+Object.defineProperty(Document.prototype,'documentElement',{
+    configurable: true,
+    enumerable: true,
+    // value: function documentElement(args) {
+    //     console.log('document->documentElement', args)
+    //     console.log(arguments);
+    //     debugger;
+    //     return {};
+    // },
+    value:documentElement,
+    writable: true,
+})
+
+Object.defineProperty(Document.prototype,'appendChild',{
+    configurable: true,
+    enumerable: true,
+    value: function appendChild(args) {
+        console.log('document->appendChild', args)
+        console.log(this)
+        console.log(arguments);
+        debugger;
+        return {};
+    },
+    writable: true,
+})
+
+
+Object.defineProperty(Document.prototype,'removeChild',{
+    configurable: true,
+    enumerable: true,
+    value: function removeChild(args) {
+        console.log('document->removeChild', args)
+        console.log(arguments);
+        debugger;
+        return {};
+    },
+    writable: true,
+})
+
+frist_get_script = 1;
+Object.defineProperty(Document.prototype,'getElementsByTagName',{
+    configurable: true,
+    enumerable: true,
+    value: function getElementsByTagName(args) {
+        console.log('document->getElementsByTagName: ', args);
+        console.log(arguments)
+        debugger
+        if (args == 'script')
+        {
+            if (frist_get_script == 1)
+            {
+                frist_get_script = 0;
+                return scripts;
+            }
+            return [];
+        }
+        if (args === 'base') {
+            debugger;
+            return doc_base;
+        }
+        return [];
+    },
+    writable: true,
+})
+
+Object.defineProperty(Document.prototype,'getElementById',{
+    configurable: true,
+    enumerable: true,
+    value: function getElementById(args) {
+        console.log('document->getElementById', args)
+        console.log(arguments);
+        debugger;
+        return l_meta;
+    },
+    writable: true,
+})
+
+
+HTMLDocument = function HTMLDocument(){}
+
+Object.setPrototypeOf(HTMLDocument.prototype,Document.prototype)
+document = new HTMLDocument()
+// console.log(document.createElement('script'));
+
+Object.defineProperty(document.all,'length',{
+    get : function (){
+        console.log('document.all.length ------------------------------------->')
+        return Object.keys(document.all).length
+    }
+})
+
+document.all[0] = null;
+document.all[1] = null;
+document.all[2] = null;
+document.all[3] = null;
+document.all[4] = null;
+document.all[5] = null;
+
+// document.all = [{},{},{},{},{},{}];
+
+function Window(){};
+
+window.Window = Window;
+
+window.__proto__ = Window.prototype;
+
+_null = function (){
+    debugger;
+    console.log(arguments)
+    return {};
+}
+
+_mutationObserver = {
+    observe:function(args)
+    {
+        console.log('_mutationObserver->observe', args)
+        console.log(arguments);
+        return {};
+    }
+};
+
+window.innerHeight = 945;
+window.innerWidth = 1920;
+window.outerHeight = 1022;
+window.outerWidth = 1910;
+window.TEMPORARY = 0;
+
+window.MutationObserver = function(args)
+{
+    console.log('window->mutationObserver', args)
+    console.log(arguments);
+    return _mutationObserver;
+}
+
+CanvasRenderingContext2D = function () {
+
+};
+
+getImageData = {
+    toString() {
+        console.log('getImageData');
+        return 'function getImageData() { [native code] }'
+    }
+}
+
+Object.defineProperty(CanvasRenderingContext2D.prototype,'getImageData',{
+    get : function (){
+        return getImageData;
+    }
+})
+
+HTMLCanvasElement = function () {
+
+};
+
+toBlob = {
+    toString() {
+        console.log('toBlob');
+        return 'function toBlob() { [native code] }'
+    }
+}
+
+toDataURL = {
+    toString() {
+        console.log('toDataURL');
+        return 'function toDataURL() { [native code] }'
+    }
+}
+
+Object.defineProperty(HTMLCanvasElement.prototype,'toBlob',{
+    get : function (){
+        return toBlob;
+    }
+})
+
+Object.defineProperty(HTMLCanvasElement.prototype,'toDataURL',{
+    get : function (){
+        return toDataURL;
+    }
+})
+
+window.CanvasRenderingContext2D = CanvasRenderingContext2D;
+window.HTMLCanvasElement = HTMLCanvasElement;
+
+WebSocket = function(args)
+{
+    console.log('WebSocket ----------------------->', args);
+    return {};
+}
+
+window.WebSocket = WebSocket;
+
+webkitRequestFileSystem = _null;
+
+window.webkitRequestFileSystem = webkitRequestFileSystem;
+
+chrome = {};
+window.chrome = chrome;
+
+//去浏览器里拿
+location = {
+    "ancestorOrigins": {},
+    "href": "xxxxxxxx",
+    "origin": "xxxxxxxx",
+    "protocol": "https:",
+    "host": "xxxxxxxx",
+    "hostname": "xxxxxxxx",
+    "port": "",
+    "pathname": "xxxxxxxx",
+    "search": "xxxxxxxx",
+    "hash": ""
+}
+
+window.top = window;
+window.self = window;
+
+navigator = {
+    appCodeName: "Mozilla",
+    appName: "Netscape",
+    appVersion: "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    connection: {
+       downlink: 2.4,
+       effectiveType: "4g",
+       onchange: null,
+        rtt: 50,
+        saveData: false
+    },
+    cookieEnabled: true,
+    deprecatedRunAdAuctionEnforcesKAnonymity: true,
+    deviceMemory: 8,
+    doNotTrack: null,
+    hardwareConcurrency: 22,
+    languages: ["zh-CN", "en", "zh"],
+    language: "zh-CN",
+    onLine: true,
+    platform: "Win32",
+    product: "Gecko",
+    productSub: '20030107',
+    userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    vendor: "Google Inc.",
+    vendorSub: "",
+    // webdriver: false,
+    webkitPersistentStorage: {},
+    getBattery: function() {return {then(){}}}
+};
+
+function Naviator(){};
+
+Object.defineProperties(Naviator.prototype,{})
+
+function webdriver()
+{
+    console.log("webdriver--------------------->");
+    return false;
+}
+
+webdriver.toString = function () {return 'false'}
+
+Object.defineProperty(Naviator.prototype, 'webdriver',{
+    [Symbol.toStringTag]: {
+        value: 'webdriver',
+        configurable: true
+    },
+    configurable:true,
+    enumerable: true,
+    get: webdriver
+});
+
+navigator.__proto__ = Naviator.prototype;
+
+
+Object.defineProperties(navigator, {
+    [Symbol.toStringTag]: {
+        value: 'webdriver',
+        configurable: true
+    }
+})
+
+
+window.navigator = navigator;
+
+window["clientInformation"] = navigator;
+
+window.location = location;
+
+window.history = {
+    length: 2,
+    state: null,
+    scrollRestoration: "auto",
+    replaceState: _null,
+}
+
+screen = {
+    availHeight: 1392,
+    availLeft: 1536,
+    availTop: 0,
+    availWidth: 2560,
+    colorDepth: 24,
+    height: 1440,
+    isExtended: true,
+    onchange: null,
+    orientation: {angle: 0, type: 'landscape-primary', onchange: null},
+    pixelDepth: 24,
+    width: 2560
+}
+
+window.screen = screen;
+
+window.DOMParser = function ()
+{
+    debugger;
+    return {};
+}
+
+window.XMLHttpRequest = function () {
+    debugger;
+    return {}
+}
+
+localStorage = {
+    length: 0,
+    removeItem: function () {
+        console.log('localStorage->removeItem')
+        console.log(arguments);
+    },
+    setItem: function () {
+        console.log('localStorage->setItem');
+        console.log(arguments);
+        this[arguments[0]] = arguments[1];
+        console.log(this);
+    },
+    getItem: function (args) {
+        console.log('localStorage->getItem')
+        console.log(arguments);
+        return this[args];
+    },
+}
+sessionStorage = {
+    length: 0,
+    removeItem: function () {
+        console.log('localStorage->removeItem')
+        console.log(arguments);
+    },
+    setItem: function () {
+        console.log('localStorage->setItem');
+        console.log(arguments);
+        this[arguments[0]] = arguments[1];
+        console.log(this);
+    },
+    getItem: function (args) {
+        console.log('localStorage->getItem')
+        console.log(arguments);
+        console.log(this[args]);
+        return this[args];
+    },
+}
+
+window.localStorage = localStorage;
+window.sessionStorage = sessionStorage;
+window.name = '$_YWTU=7nXC8M_ZRylQDpM8YlUdxPdHlh7M_t8lWHF71cWe4Q7&$_YVTX=Js3&vdFm='
+
+indexedDB = {
+    open: function (args) {
+        console.log('indexedDB->open---------------->');
+        // return {};
+        return indexedDB;
+    }
+}
+
+window.indexedDB = indexedDB;
+
+
+window.addEventListener = function (args)
+{
+    console.log('window->addEventListener: ', args)
+    debugger;
+    return {};
+}
+
+window.attachEvent = undefined;
+
+
+window.Request = function (args)
+{
+    console.log('window->Request: ', args)
+    debugger;
+    return {};
+}
+
+window.fetch  = function (args)
+{
+    console.log('window->fetch: ', args)
+    debugger;
+    return {};
+}
+
+
+window.setInterval = _null;
+window.setTimeout = _null;
+
+window.document = document;
+
+//$_ts=window['$_ts']内容
+require('./ts')
+
+//外链js内容
+require('./link')
+
+function get_cookie()
+{
+    return document.cookie;
+}

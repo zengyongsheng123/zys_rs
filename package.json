@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "axios": "^1.7.8",
+    "canvas": "^2.11.2",
+    "colors": "^1.4.0",
+    "crypto-js": "^4.2.0",
+    "express": "^4.21.1",
+    "js-beautify": "^1.15.4",
+    "jsdom": "^25.0.1",
+    "jsencrypt": "^3.3.2",
+    "node-rsa": "^1.1.1",
+    "npm": "^11.0.0",
+    "sharp": "^0.34.1",
+    "sm-crypto": "^0.3.13",
+    "text-encoding": "^0.7.0",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "javascript-obfuscator": "^4.1.1"
+  }
+}

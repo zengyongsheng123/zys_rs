@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>脱环境(author: lwj)</title>
+    <style>
+        .dom-header, .bom-header {
+            display: flex;
+            gap: 10px;
+        }
+
+        .dom-options, .bom-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            align-items: start;
+        }
+
+        .items .item label {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <div class="dom-env">
+        <div class="dom-header">
+            <span>DOM环境 |</span>
+            <div class="dom-options">
+                <div class="option option-all">
+                    <label>
+                        <input type="checkbox"/>
+                        <span>全选</span>
+                    </label>
+                </div>
+                <div class="option option-not-all">
+                    <label>
+                        <input type="checkbox"/>
+                        <span>全不选</span>
+                    </label>
+                </div>
+                <div class="option option-reverse">
+                    <label>
+                        <input type="checkbox"/>
+                        <span>反选</span>
+                    </label>
+                </div>
+            </div>
+            <button class="dom-env-download">下载文件</button>
+            <button class="dom-env-hook-download">下载全量Hook脚本</button>
+        </div>
+        <hr>
+        <div class="items"></div>
+    </div>
+    <hr>
+    <!-- BOM环境-->
+    <div class="bom-env">
+        <div class="bom-header">
+            <span>BOM环境 |</span>
+            <div class="bom-options">
+                <div class="option option-all">
+                    <label>
+                        <input type="checkbox"/>
+                        <span>全选</span>
+                    </label>
+                </div>
+                <div class="option option-not-all">
+                    <label>
+                        <input type="checkbox"/>
+                        <span>全不选</span>
+                    </label>
+                </div>
+                <div class="option option-reverse">
+                    <label>
+                        <input type="checkbox"/>
+                        <span>反选</span>
+                    </label>
+                </div>
+            </div>
+            <button class="bom-env-download">下载文件</button>
+        </div>
+        <hr>
+        <div class="items"></div>
+    </div>
+</div>
+<script>
+    const domItems = document.querySelector(".dom-env .items")
+    const bomItems = document.querySelector(".bom-env .items")
+
+    class Env {
+        static DOMProps = ["Option", "Image", "Audio", "XMLDocument", "Text", "ShadowRoot", "SVGViewElement", "SVGUseElement", "SVGTitleElement", "SVGTextPositioningElement", "SVGTextPathElement", "SVGTextElement", "SVGTextContentElement", "SVGTSpanElement", "SVGSymbolElement", "SVGSwitchElement", "SVGStyleElement", "SVGStopElement", "SVGSetElement", "SVGScriptElement", "SVGSVGElement", "SVGRectElement", "SVGRadialGradientElement", "SVGPolylineElement", "SVGPolygonElement", "SVGPatternElement", "SVGPathElement", "SVGMetadataElement", "SVGMaskElement", "SVGMarkerElement", "SVGMPathElement", "SVGLinearGradientElement", "SVGLineElement", "SVGImageElement", "SVGGraphicsElement", "SVGGradientElement", "SVGGeometryElement", "SVGGElement", "SVGForeignObjectElement", "SVGFilterElement", "SVGFETurbulenceElement", "SVGFETileElement", "SVGFESpotLightElement", "SVGFESpecularLightingElement", "SVGFEPointLightElement", "SVGFEOffsetElement", "SVGFEMorphologyElement", "SVGFEMergeNodeElement", "SVGFEMergeElement", "SVGFEImageElement", "SVGFEGaussianBlurElement", "SVGFEFuncRElement", "SVGFEFuncGElement", "SVGFEFuncBElement", "SVGFEFuncAElement", "SVGFEFloodElement", "SVGFEDropShadowElement", "SVGFEDistantLightElement", "SVGFEDisplacementMapElement", "SVGFEDiffuseLightingElement", "SVGFEConvolveMatrixElement", "SVGFECompositeElement", "SVGFEComponentTransferElement", "SVGFEColorMatrixElement", "SVGFEBlendElement", "SVGEllipseElement", "SVGElement", "SVGDescElement", "SVGDefsElement", "SVGComponentTransferFunctionElement", "SVGClipPathElement", "SVGCircleElement", "SVGAnimationElement", "SVGAnimateTransformElement", "SVGAnimateMotionElement", "SVGAnimateElement", "SVGAElement", "ProcessingInstruction", "Node", "MathMLElement", "HTMLVideoElement", "HTMLUnknownElement", "HTMLUListElement", "HTMLTrackElement", "HTMLTitleElement", "HTMLTimeElement", "HTMLTextAreaElement", "HTMLTemplateElement", "HTMLTableSectionElement", "HTMLTableRowElement", "HTMLTableElement", "HTMLTableColElement", "HTMLTableCellElement", "HTMLTableCaptionElement", "HTMLStyleElement", "HTMLSpanElement", "HTMLSourceElement", "HTMLSlotElement", "HTMLSelectElement", "HTMLScriptElement", "HTMLQuoteElement", "HTMLProgressElement", "HTMLPreElement", "HTMLPictureElement", "HTMLParamElement", "HTMLParagraphElement", "HTMLOutputElement", "HTMLOptionElement", "HTMLOptGroupElement", "HTMLObjectElement", "HTMLOListElement", "HTMLModElement", "HTMLMeterElement", "HTMLMetaElement", "HTMLMenuElement", "HTMLMediaElement", "HTMLMarqueeElement", "HTMLMapElement", "HTMLLinkElement", "HTMLLegendElement", "HTMLLabelElement", "HTMLLIElement", "HTMLInputElement", "HTMLImageElement", "HTMLIFrameElement", "HTMLHtmlElement", "HTMLHeadingElement", "HTMLHeadElement", "HTMLHRElement", "HTMLFrameSetElement", "HTMLFrameElement", "HTMLFormElement", "HTMLFontElement", "HTMLFieldSetElement", "HTMLEmbedElement", "HTMLElement", "HTMLDocument", "HTMLDivElement", "HTMLDirectoryElement", "HTMLDialogElement", "HTMLDetailsElement", "HTMLDataListElement", "HTMLDataElement", "HTMLDListElement", "HTMLCanvasElement", "HTMLButtonElement", "HTMLBodyElement", "HTMLBaseElement", "HTMLBRElement", "HTMLAudioElement", "HTMLAreaElement", "HTMLAnchorElement", "Element", "DocumentType", "DocumentFragment", "Document", "Comment", "CharacterData", "CDATASection", "Attr", "HTMLFencedFrameElement", "HTMLSelectedContentElement"];
+        static BOMProps = ["webkitURL", "webkitRTCPeerConnection", "webkitMediaStream", "WebKitMutationObserver", "WebKitCSSMatrix", "XSLTProcessor", "XPathResult", "XPathExpression", "XPathEvaluator", "XMLSerializer", "XMLHttpRequestUpload", "XMLHttpRequestEventTarget", "XMLHttpRequest", "Worker", "WindowControlsOverlayGeometryChangeEvent", "WindowControlsOverlay", "Window", "WheelEvent", "WebSocket", "WebGLVertexArrayObject", "WebGLUniformLocation", "WebGLTransformFeedback", "WebGLTexture", "WebGLSync", "WebGLShaderPrecisionFormat", "WebGLShader", "WebGLSampler", "WebGLRenderingContext", "WebGLRenderbuffer", "WebGLQuery", "WebGLProgram", "WebGLObject", "WebGLFramebuffer", "WebGLContextEvent", "WebGLBuffer", "WebGLActiveInfo", "WebGL2RenderingContext", "WaveShaperNode", "VisualViewport", "VisibilityStateEntry", "VirtualKeyboardGeometryChangeEvent", "ViewTransitionTypeSet", "ViewTransition", "ViewTimeline", "VideoPlaybackQuality", "VideoFrame", "VideoColorSpace", "ValidityState", "VTTCue", "UserActivation", "URLPattern", "UIEvent", "TrustedTypePolicyFactory", "TrustedTypePolicy", "TrustedScriptURL", "TrustedScript", "TrustedHTML", "TreeWalker", "TransitionEvent", "TrackEvent", "TouchList", "TouchEvent", "Touch", "ToggleEvent", "TimeRanges", "TextUpdateEvent", "TextTrackList", "TextTrackCueList", "TextTrackCue", "TextTrack", "TextMetrics", "TextFormatUpdateEvent", "TextFormat", "TextEvent", "TaskSignal", "TaskPriorityChangeEvent", "TaskController", "TaskAttributionTiming", "SyncManager", "SubmitEvent", "StyleSheetList", "StyleSheet", "StylePropertyMapReadOnly", "StylePropertyMap", "StorageEvent", "Storage", "StereoPannerNode", "StaticRange", "SourceBufferList", "SourceBuffer", "Selection", "SecurityPolicyViolationEvent", "ScrollTimeline", "ScriptProcessorNode", "ScreenOrientation", "Screen", "Scheduling", "Scheduler", "SVGUnitTypes", "SVGTransformList", "SVGTransform", "SVGStringList", "SVGRect", "SVGPreserveAspectRatio", "SVGPointList", "SVGPoint", "SVGNumberList", "SVGNumber", "SVGMatrix", "SVGLengthList", "SVGLength", "SVGAnimatedTransformList", "SVGAnimatedString", "SVGAnimatedRect", "SVGAnimatedPreserveAspectRatio", "SVGAnimatedNumberList", "SVGAnimatedNumber", "SVGAnimatedLengthList", "SVGAnimatedLength", "SVGAnimatedInteger", "SVGAnimatedEnumeration", "SVGAnimatedBoolean", "SVGAnimatedAngle", "SVGAngle", "ResizeObserverSize", "ResizeObserverEntry", "ResizeObserver", "ReportingObserver", "ReportBody", "Range", "RadioNodeList", "RTCTrackEvent", "RTCStatsReport", "RTCSessionDescription", "RTCSctpTransport", "RTCRtpTransceiver", "RTCRtpSender", "RTCRtpReceiver", "RTCPeerConnectionIceEvent", "RTCPeerConnectionIceErrorEvent", "RTCPeerConnection", "RTCIceTransport", "RTCIceCandidate", "RTCErrorEvent", "RTCError", "RTCEncodedVideoFrame", "RTCEncodedAudioFrame", "RTCDtlsTransport", "RTCDataChannelEvent", "RTCDTMFToneChangeEvent", "RTCDTMFSender", "RTCCertificate", "PromiseRejectionEvent", "ProgressEvent", "Profiler", "PopStateEvent", "PointerEvent", "PluginArray", "Plugin", "PictureInPictureWindow", "PictureInPictureEvent", "PeriodicWave", "PerformanceTiming", "PerformanceServerTiming", "PerformanceScriptTiming", "PerformanceResourceTiming", "PerformancePaintTiming", "PerformanceObserverEntryList", "PerformanceObserver", "PerformanceNavigationTiming", "PerformanceNavigation", "PerformanceMeasure", "PerformanceMark", "PerformanceLongTaskTiming", "PerformanceLongAnimationFrameTiming", "PerformanceEventTiming", "PerformanceEntry", "PerformanceElementTiming", "Path2D", "PannerNode", "PageTransitionEvent", "OverconstrainedError", "OscillatorNode", "OffscreenCanvasRenderingContext2D", "OffscreenCanvas", "OfflineAudioContext", "OfflineAudioCompletionEvent", "NodeList", "NodeIterator", "NetworkInformation", "NavigatorUAData", "Navigator", "NavigationTransition", "NavigationHistoryEntry", "NavigationDestination", "NavigationCurrentEntryChangeEvent", "Navigation", "NavigateEvent", "NamedNodeMap", "MutationRecord", "MutationObserver", "MouseEvent", "MimeTypeArray", "MimeType", "MediaStreamTrackVideoStats", "MediaStreamTrackProcessor", "MediaStreamTrackGenerator", "MediaStreamTrackEvent", "MediaStreamTrackAudioStats", "MediaStreamTrack", "MediaStreamEvent", "MediaStreamAudioSourceNode", "MediaStreamAudioDestinationNode", "MediaStream", "MediaSourceHandle", "MediaSource", "MediaRecorder", "MediaQueryListEvent", "MediaQueryList", "MediaList", "MediaError", "MediaEncryptedEvent", "MediaElementAudioSourceNode", "MediaCapabilities", "Location", "LayoutShiftAttribution", "LayoutShift", "LargestContentfulPaint", "KeyframeEffect", "KeyboardEvent", "IntersectionObserverEntry", "IntersectionObserver", "InputEvent", "InputDeviceInfo", "InputDeviceCapabilities", "Ink", "ImageData", "ImageCapture", "ImageBitmapRenderingContext", "ImageBitmap", "IdleDeadline", "IIRFilterNode", "IDBVersionChangeEvent", "IDBTransaction", "IDBRequest", "IDBOpenDBRequest", "IDBObjectStore", "IDBKeyRange", "IDBIndex", "IDBFactory", "IDBDatabase", "IDBCursorWithValue", "IDBCursor", "History", "HighlightRegistry", "Highlight", "HashChangeEvent", "HTMLOptionsCollection", "HTMLFormControlsCollection", "HTMLCollection", "HTMLAllCollection", "GeolocationPositionError", "GeolocationPosition", "GeolocationCoordinates", "Geolocation", "GamepadHapticActuator", "GamepadEvent", "GamepadButton", "Gamepad", "GainNode", "FormDataEvent", "FontFaceSetLoadEvent", "FontFace", "FocusEvent", "FileReader", "FileList", "File", "FeaturePolicy", "External", "EventSource", "EventCounts", "ErrorEvent", "EncodedVideoChunk", "EncodedAudioChunk", "ElementInternals", "EditContext", "DynamicsCompressorNode", "DragEvent", "DocumentTimeline", "DelegatedInkTrailPresenter", "DelayNode", "DataTransferItemList", "DataTransferItem", "DataTransfer", "DOMTokenList", "DOMStringMap", "DOMStringList", "DOMRectReadOnly", "DOMRectList", "DOMRect", "DOMQuad", "DOMPointReadOnly", "DOMPoint", "DOMParser", "DOMMatrixReadOnly", "DOMMatrix", "DOMImplementation", "DOMError", "CustomStateSet", "CustomEvent", "CustomElementRegistry", "Crypto", "ConvolverNode", "ContentVisibilityAutoStateChangeEvent", "ConstantSourceNode", "CompositionEvent", "CloseWatcher", "CloseEvent", "ClipboardEvent", "CharacterBoundsUpdateEvent", "ChannelSplitterNode", "ChannelMergerNode", "CanvasRenderingContext2D", "CanvasPattern", "CanvasGradient", "CanvasCaptureMediaStreamTrack", "CSSVariableReferenceValue", "CSSUnparsedValue", "CSSUnitValue", "CSSTranslate", "CSSTransition", "CSSTransformValue", "CSSTransformComponent", "CSSSupportsRule", "CSSStyleValue", "CSSStyleSheet", "CSSStyleRule", "CSSStyleDeclaration", "CSSStartingStyleRule", "CSSSkewY", "CSSSkewX", "CSSSkew", "CSSScopeRule", "CSSScale", "CSSRuleList", "CSSRule", "CSSRotate", "CSSPropertyRule", "CSSPositionValue", "CSSPositionTryRule", "CSSPositionTryDescriptors", "CSSPerspective", "CSSPageRule", "CSSNumericValue", "CSSNumericArray", "CSSNestedDeclarations", "CSSNamespaceRule", "CSSMediaRule", "CSSMatrixComponent", "CSSMathValue", "CSSMathSum", "CSSMathProduct", "CSSMathNegate", "CSSMathMin", "CSSMathMax", "CSSMathInvert", "CSSMathClamp", "CSSLayerStatementRule", "CSSLayerBlockRule", "CSSKeywordValue", "CSSKeyframesRule", "CSSKeyframeRule", "CSSImportRule", "CSSImageValue", "CSSGroupingRule", "CSSFontPaletteValuesRule", "CSSFontFaceRule", "CSSCounterStyleRule", "CSSContainerRule", "CSSConditionRule", "CSSAnimation", "CSPViolationReportBody", "BrowserCaptureMediaStreamTrack", "BlobEvent", "BiquadFilterNode", "BeforeUnloadEvent", "BeforeInstallPromptEvent", "BaseAudioContext", "BarProp", "AudioWorkletNode", "AudioSinkInfo", "AudioScheduledSourceNode", "AudioProcessingEvent", "AudioParamMap", "AudioParam", "AudioNode", "AudioListener", "AudioDestinationNode", "AudioData", "AudioContext", "AudioBufferSourceNode", "AudioBuffer", "AnimationTimeline", "AnimationPlaybackEvent", "AnimationEvent", "AnimationEffect", "Animation", "AnalyserNode", "AbstractRange", "Iterator", "AICreateMonitor", "AbsoluteOrientationSensor", "Accelerometer", "AudioDecoder", "AudioEncoder", "AudioWorklet", "BatteryManager", "Cache", "CacheStorage", "Clipboard", "ClipboardItem", "CookieChangeEvent", "CookieStore", "CookieStoreManager", "Credential", "CredentialsContainer", "CryptoKey", "DeviceMotionEvent", "DeviceMotionEventAcceleration", "DeviceMotionEventRotationRate", "DeviceOrientationEvent", "FederatedCredential", "GPU", "GPUAdapter", "GPUAdapterInfo", "GPUBindGroup", "GPUBindGroupLayout", "GPUBuffer", "GPUCanvasContext", "GPUCommandBuffer", "GPUCommandEncoder", "GPUCompilationInfo", "GPUCompilationMessage", "GPUComputePassEncoder", "GPUComputePipeline", "GPUDevice", "GPUDeviceLostInfo", "GPUError", "GPUExternalTexture", "GPUInternalError", "GPUOutOfMemoryError", "GPUPipelineError", "GPUPipelineLayout", "GPUQuerySet", "GPUQueue", "GPURenderBundle", "GPURenderBundleEncoder", "GPURenderPassEncoder", "GPURenderPipeline", "GPUSampler", "GPUShaderModule", "GPUSupportedFeatures", "GPUSupportedLimits", "GPUTexture", "GPUTextureView", "GPUUncapturedErrorEvent", "GPUValidationError", "GravitySensor", "Gyroscope", "IdleDetector", "ImageDecoder", "ImageTrack", "ImageTrackList", "Keyboard", "KeyboardLayoutMap", "LinearAccelerationSensor", "MIDIAccess", "MIDIConnectionEvent", "MIDIInput", "MIDIInputMap", "MIDIMessageEvent", "MIDIOutput", "MIDIOutputMap", "MIDIPort", "MediaDeviceInfo", "MediaDevices", "MediaKeyMessageEvent", "MediaKeySession", "MediaKeyStatusMap", "MediaKeySystemAccess", "MediaKeys", "NavigationPreloadManager", "NavigatorManagedData", "OrientationSensor", "PasswordCredential", "ProtectedAudience", "RelativeOrientationSensor", "ScreenDetailed", "ScreenDetails", "Sensor", "SensorErrorEvent", "ServiceWorker", "ServiceWorkerContainer", "ServiceWorkerRegistration", "StorageManager", "SubtleCrypto", "VideoDecoder", "VideoEncoder", "VirtualKeyboard", "WGSLLanguageFeatures", "WebTransport", "WebTransportBidirectionalStream", "WebTransportDatagramDuplexStream", "WebTransportError", "Worklet", "XRDOMOverlayState", "XRLayer", "XRWebGLBinding", "AuthenticatorAssertionResponse", "AuthenticatorAttestationResponse", "AuthenticatorResponse", "PublicKeyCredential", "Bluetooth", "BluetoothCharacteristicProperties", "BluetoothDevice", "BluetoothRemoteGATTCharacteristic", "BluetoothRemoteGATTDescriptor", "BluetoothRemoteGATTServer", "BluetoothRemoteGATTService", "CaptureController", "DevicePosture", "DocumentPictureInPicture", "EyeDropper", "FileSystemDirectoryHandle", "FileSystemFileHandle", "FileSystemHandle", "FileSystemWritableFileStream", "FileSystemObserver", "FontData", "FragmentDirective", "HID", "HIDConnectionEvent", "HIDDevice", "HIDInputReportEvent", "IdentityCredential", "IdentityProvider", "NavigatorLogin", "IdentityCredentialError", "LaunchParams", "LaunchQueue", "Lock", "LockManager", "NotRestoredReasonDetails", "NotRestoredReasons", "OTPCredential", "PaymentAddress", "PaymentRequest", "PaymentRequestUpdateEvent", "PaymentResponse", "PaymentManager", "PaymentMethodChangeEvent", "Presentation", "PresentationAvailability", "PresentationConnection", "PresentationConnectionAvailableEvent", "PresentationConnectionCloseEvent", "PresentationConnectionList", "PresentationReceiver", "PresentationRequest", "PressureObserver", "PressureRecord", "Serial", "SerialPort", "StorageBucket", "StorageBucketManager", "USB", "USBAlternateInterface", "USBConfiguration", "USBConnectionEvent", "USBDevice", "USBEndpoint", "USBInTransferResult", "USBInterface", "USBIsochronousInTransferPacket", "USBIsochronousInTransferResult", "USBIsochronousOutTransferPacket", "USBIsochronousOutTransferResult", "USBOutTransferResult", "WakeLock", "WakeLockSentinel", "XRAnchor", "XRAnchorSet", "XRBoundedReferenceSpace", "XRCPUDepthInformation", "XRCamera", "XRDepthInformation", "XRFrame", "XRHitTestResult", "XRHitTestSource", "XRInputSource", "XRInputSourceArray", "XRInputSourceEvent", "XRInputSourcesChangeEvent", "XRLightEstimate", "XRLightProbe", "XRPose", "XRRay", "XRReferenceSpace", "XRReferenceSpaceEvent", "XRRenderState", "XRRigidTransform", "XRSession", "XRSessionEvent", "XRSpace", "XRSystem", "XRTransientInputHitTestResult", "XRTransientInputHitTestSource", "XRView", "XRViewerPose", "XRViewport", "XRWebGLDepthInformation", "XRWebGLLayer", "XRHand", "XRJointPose", "XRJointSpace", "BackgroundFetchManager", "BackgroundFetchRecord", "BackgroundFetchRegistration", "BluetoothUUID", "CSSFontFeatureValuesRule", "CSSMarginRule", "CSSViewTransitionRule", "CaretPosition", "ChapterInformation", "CropTarget", "DocumentPictureInPictureEvent", "Fence", "FencedFrameConfig", "MediaMetadata", "MediaSession", "NavigationActivation", "Notification", "PageRevealEvent", "PageSwapEvent", "PeriodicSyncManager", "PermissionStatus", "Permissions", "PushManager", "PushSubscription", "PushSubscriptionOptions", "RTCDataChannel", "RemotePlayback", "RestrictionTarget", "SharedStorage", "SharedStorageWorklet", "SharedStorageAppendMethod", "SharedStorageClearMethod", "SharedStorageDeleteMethod", "SharedStorageModifierMethod", "SharedStorageSetMethod", "SharedWorker", "SnapEvent", "SpeechSynthesis", "SpeechSynthesisErrorEvent", "SpeechSynthesisEvent", "SpeechSynthesisUtterance", "SpeechSynthesisVoice", "WebSocketError", "WebSocketStream", "webkitSpeechGrammar", "webkitSpeechGrammarList", "webkitSpeechRecognition", "webkitSpeechRecognitionError", "webkitSpeechRecognitionEvent", "JSCompiler_renameProperty"]
+        static funcToStrEnv = `const $toString = Function.toString
+        const myFunction_toString_symbol = Symbol('('.concat('', ')_', (Math.random() + '').toString(36)));
+        const myToString = function () {
+            let result = typeof this == 'function' && this[myFunction_toString_symbol] || $toString.call(this)
+            console.log("iframe Function toString => ", result)
+            return result;
+        };
+
+        function set_native(func, key, value) {
+            Object.defineProperty(func, key, {
+                "enumerable": false,
+                "configurable": true,
+                "writable": true,
+                "value": value
+            })
+        }
+
+        delete Function.prototype['toString'];
+        set_native(Function.prototype, "toString", myToString);
+        set_native(Function.prototype.toString, myFunction_toString_symbol, "function toString() { [native code] }");
+        func_set_native = (func) => {
+            set_native(func, myFunction_toString_symbol, "function " + (myFunction_toString_symbol, func.name || '') + "() { [native code] }");
+        };`
+
+        async autoGeneratorFuncDefine(proto, protoText, debug = false) {
+            let envStr = ""
+            const names = Object.getOwnPropertyNames(proto)
+            const funcs = []
+            const props = []
+            names.forEach(key => {
+                try {
+                    if (Object.hasOwn(proto, key)) {
+                        if (typeof proto[key] === "function") {
+                            key !== "constructor" && funcs.push(key)
+                        } else {
+                            props.push(key)
+                        }
+                    } else {
+                        console.log("find not self prop or func", key)
+                    }
+                } catch (err) {
+                    props.push(key)
+                }
+            })
+            funcs.forEach(key => {
+                console.log("============ " + protoText + "." + key + " ============")
+                try {
+                    if (typeof proto[key] === "function") {
+                        console.log(proto[key].toString())
+                    }
+                } catch (err) {
+
+                }
+            })
+            const consName = protoText.indexOf(".prototype") !== -1 ? protoText.split(".")[0] : protoText
+            for (let i = 0; i < funcs.length; i++) {
+                const key = funcs[i]
+                const funcDesc = Object.getOwnPropertyDescriptor(proto, key)
+                const funcNameDesc = Object.getOwnPropertyDescriptor(proto[key], "name")
+                const funcLengthDesc = Object.getOwnPropertyDescriptor(proto[key], "length")
+
+                let callErrEnv = await new Promise(function (resolve) {
+                    try {
+                        proto[key]().catch(function (err) {
+                            resolve(`if(${protoText} === this) {
+                        const err = new ${err.name}("${err.message}")\nthrow err;
+                    }\n`)
+                        })
+                    } catch (err) {
+                        resolve(`if(${protoText} === this) {
+                    const err = new ${err.name}("${err.message}")\nthrow err;
+                }\n`)
+                    }
+                })
+
+                const debugFuncName = `_${protoText.replace(".", "_")}_${key}`
+                const prefix = debug ? `const ${debugFuncName} = ${protoText}.${key}` : ""
+                const funcBody = debug ? `console.log("${protoText}.${key} args => ", ...arguments);
+                const result = ${debugFuncName}.apply(this, arguments);
+                console.log("${protoText}.${key} result => ", result)
+                return result;
+            ` : `${callErrEnv}console.log("${consName} ${key} func called!!!")
+                debugger;`
+                const funcPrototypeEnv = proto[key].prototype === undefined ? `\n${protoText}.${key}.prototype = undefined;` : ""
+                const funcDescEnv = `Object.getOwnPropertyDescriptor(${protoText}, "${key}", {
+            configurable: ${funcDesc.configurable},
+            enumerable: ${funcDesc.enumerable},
+            writable: ${funcDesc.writable},
+            value: ${protoText}.${key}
+        })`
+                const funcNameDescEnv = `Object.getOwnPropertyDescriptor(${protoText}.${key}, "name", {
+            configurable: ${funcNameDesc.configurable},
+            enumerable: ${funcNameDesc.enumerable},
+            writable: ${funcNameDesc.writable},
+            value: "${funcNameDesc.value}"
+        })`
+                const funcLengthDescEnv = `Object.getOwnPropertyDescriptor(${protoText}.${key}, "length", {
+            configurable: ${funcLengthDesc.configurable},
+            enumerable: ${funcLengthDesc.enumerable},
+            writable: ${funcLengthDesc.writable},
+            value: ${funcLengthDesc.value}
+        })`
+                envStr += `${prefix}
+                ${protoText}.${key} = function ${key}() {
+                    ${funcBody}
+                }${debug ? "" : funcPrototypeEnv + "\n" + funcDescEnv + "\n" + funcNameDescEnv + "\n" + funcLengthDescEnv}
+                `
+            }
+            funcs.forEach(key => {
+                try {
+                    if (proto[key].toString().indexOf("{ [native code] }") !== -1) {
+                        envStr += `func_set_native(${protoText}.${key});\n`
+                    } else {
+                        console.log("发现不是native的函数" + protoText + "." + key)
+                    }
+                } catch (err) {
+                    console.log(`${protoText}.${key}.toString()出现错误`, err.name + " " + err.message)
+                }
+            })
+            console.log("================== all Function ====================")
+            console.log(JSON.stringify(funcs))
+            console.log("================== all Property ====================")
+            console.log(JSON.stringify(props))
+            return {
+                funcs,
+                props,
+                envStr: debug ? `${Env.funcToStrEnv}\n${envStr}` : envStr
+            }
+        }
+
+        getDescEnv(proto, protoText, keys, options = {}) {
+            const {
+                useRecord = false,
+                useDefaultStack = false,
+                insertGetter0 = () => "",
+                errStackSampler = () => ""
+            } = options
+            const consName = `${proto.constructor.name}`
+            const recordName = `${consName}Record`
+            let envStr = useRecord ? `const ${recordName} = scopeStorage.${consName}Record = new Map();\n` : ""
+
+            keys.forEach(key => {
+                try {
+                    const desc = Object.getOwnPropertyDescriptor(proto, key)
+                    const configurable = desc.configurable
+                    const enumerable = desc.enumerable
+                    const writable = desc.writable === undefined ? "" : "writable: " + desc.writable + ",\n"
+                    const value = desc.value === undefined ? "" : (
+                        typeof desc.value === "function" ? `function ${key}() { debugger; }` : (
+                            desc.value === null ? null : (
+                                typeof desc.value === "object" ? "return {}" : `value: ${desc.value}`
+                            )
+                        )
+                    )
+                    let getter = "", setter = ""
+                    let getCond = "", setCond = ""
+                    const protoText_ = protoText.replace(".", "_")
+                    try {
+                        console.log(`${protoText}.${key} = `, proto[key])
+                    } catch (err) {
+                        const errStacks = err.stack.split("\n")
+                        const errStack = errStacks.map((str, index) => "\"" + str + (errStacks.length - 1 === index ? "\"\n" : "\\n\"\n")).join("+")
+                        const errStackStr = useDefaultStack ? `\nerr.stack = ${errStackSampler(key) || errStack}` : ""
+                        getCond = `if(${protoText} === this) {
+                        console.log("不能直接通过${protoText}访问属性${key}");
+                        const err = new ${err.name}("${err.message}")${errStackStr}
+                        throw err;
+                    }\n`
+                        setCond = `if(${protoText} === this) {
+                        console.log("不能直接通过${protoText}设置属性${key}");
+                        const err = new ${err.name}("${err.message}")${errStackStr}
+                        throw err;
+                    }\n`
+                    }
+                    let recordGetterText = useRecord && desc.set !== undefined ? `if(${recordName}.has(this)) {
+                    return ${recordName}.get(this).${key}
+                }\n` : ""
+                    let recordSetterText = useRecord ? `if(!${recordName}.has(this)) ${recordName}.set(this, {});
+                ${recordName}.get(this).${key} = value;` : "debugger;"
+
+                    if (desc.writable === undefined && desc.value === undefined) {
+                        getter = desc.get === undefined ? "get: undefined" : `get: function ${key}() {
+                        ${getCond}${recordGetterText}${insertGetter0(key)}debugger;
+                    },\n`
+                        setter = desc.set === undefined ? "set: undefined" : `set: function ${key}(value) {
+                        ${setCond}${recordSetterText}
+                    }`
+                    }
+
+                    if (desc) {
+                        envStr += `
+                    Object.defineProperty(${protoText}, "${key}", {
+                        configurable: ${configurable},
+                        enumerable: ${enumerable},
+                        ${writable}${value}${getter}${setter}
+                    })
+                    `
+                        if (desc.get) {
+                            const getterName = `${consName}_${key}_getter`
+                            const keyGetter = Object.getOwnPropertyDescriptor(proto, key).get
+                            const nameOfKeyDesc = Object.getOwnPropertyDescriptor(keyGetter, "name")
+                            const lengthOfKeyDesc = Object.getOwnPropertyDescriptor(keyGetter, "length")
+                            envStr += `
+                        let ${getterName} = Object.getOwnPropertyDescriptor(${protoText}, "${key}").get
+                        Object.defineProperty(${getterName}, "name", {
+                            configurable: ${nameOfKeyDesc.configurable},
+                            enumerable: ${nameOfKeyDesc.enumerable},
+                            writable: ${nameOfKeyDesc.writable},
+                            value: "${nameOfKeyDesc.value}"
+                        })
+                        Object.defineProperty(${getterName}, "length", {
+                            configurable: ${lengthOfKeyDesc.configurable},
+                            enumerable: ${lengthOfKeyDesc.enumerable},
+                            writable: ${lengthOfKeyDesc.writable},
+                            value: ${lengthOfKeyDesc.value}
+                        })
+                        func_set_native(${getterName})
+                        `
+                        }
+                        if (desc.set) {
+                            const setterName = `${consName}_${key}_setter`
+                            const keySetter = Object.getOwnPropertyDescriptor(proto, key).set
+                            const nameOfKeyDesc = Object.getOwnPropertyDescriptor(keySetter, "name")
+                            const lengthOfKeyDesc = Object.getOwnPropertyDescriptor(keySetter, "length")
+                            envStr += `
+                        let ${setterName} = Object.getOwnPropertyDescriptor(${protoText}, "${key}").set
+                        Object.defineProperty(${setterName}, "name", {
+                            configurable: ${nameOfKeyDesc.configurable},
+                            enumerable: ${nameOfKeyDesc.enumerable},
+                            writable: ${nameOfKeyDesc.writable},
+                            value: "${nameOfKeyDesc.value}"
+                        })
+                        Object.defineProperty(${setterName}, "length", {
+                            configurable: ${lengthOfKeyDesc.configurable},
+                            enumerable: ${lengthOfKeyDesc.enumerable},
+                            writable: ${lengthOfKeyDesc.writable},
+                            value: ${lengthOfKeyDesc.value}
+                        })
+                        func_set_native(${setterName})
+                        `
+                        }
+                    } else {
+                        console.log("find not exist descriptor!!", key)
+                    }
+                } catch (err) {
+                    console.error(err)
+                    throw err
+                }
+            })
+            return envStr
+        }
+    }
+
+    class UI {
+        init() {
+            this.createDOMEnvElements()
+            this.DOMOptionsEvent()
+
+            this.createBOMEnvElements()
+            this.BOMOptionsEvent()
+        }
+
+        downloadFile(content, filename) {
+            const blob = new Blob([content], {type: "text/javascript"})
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            URL.revokeObjectURL(url.href);
+            document.body.removeChild(link);
+        }
+
+        createDOMEnvElements() {
+            for (let DOMProp of Env.DOMProps) {
+                const div = document.createElement("div")
+                div.classList.add("item")
+                const label = document.createElement("label")
+                const input = document.createElement("input")
+                input.value = DOMProp
+                input.type = "checkbox"
+                const span = document.createElement("span")
+                span.innerHTML = DOMProp
+                label.appendChild(input)
+                label.appendChild(span)
+                div.appendChild(label)
+                domItems.appendChild(div)
+            }
+        }
+
+        createBOMEnvElements() {
+            for (let BOMProp of Env.BOMProps) {
+                const div = document.createElement("div")
+                div.classList.add("item")
+                const label = document.createElement("label")
+                const input = document.createElement("input")
+                input.value = BOMProp
+                input.type = "checkbox"
+                const span = document.createElement("span")
+                span.innerHTML = BOMProp
+                label.appendChild(input)
+                label.appendChild(span)
+                div.appendChild(label)
+                bomItems.appendChild(div)
+            }
+        }
+
+        DOMOptionsEvent() {
+            const optionAll = document.querySelector(".dom-env .option-all")
+            const optionNotAll = document.querySelector(".dom-env .option-not-all")
+            const optionReverse = document.querySelector(".dom-env .option-reverse")
+
+            const optionInputAll = optionAll.querySelector("input")
+            const optionInputNotAll = optionNotAll.querySelector("input")
+            const optionInputReverse = optionReverse.querySelector("input")
+
+            const inputs = domItems.querySelectorAll("input")
+            optionAll.addEventListener("click", function (e) {
+                e.preventDefault()
+                optionInputAll.checked = true
+                optionInputNotAll.checked = false
+                optionInputReverse.checked = false
+                inputs.forEach(input => input.checked = true)
+            })
+            optionNotAll.addEventListener("click", function (e) {
+                e.preventDefault()
+                optionInputAll.checked = false
+                optionInputNotAll.checked = true
+                optionInputReverse.checked = false
+                inputs.forEach(input => input.checked = false)
+            })
+            optionReverse.addEventListener("click", function (e) {
+                e.preventDefault()
+                optionInputAll.checked = false
+                optionInputNotAll.checked = false
+                optionInputReverse.checked = true
+                inputs.forEach(input => {
+                    input.checked = !input.checked
+                })
+            })
+        }
+
+        BOMOptionsEvent() {
+            const optionAll = document.querySelector(".bom-env .option-all")
+            const optionNotAll = document.querySelector(".bom-env .option-not-all")
+            const optionReverse = document.querySelector(".bom-env .option-reverse")
+
+            const optionInputAll = optionAll.querySelector("input")
+            const optionInputNotAll = optionNotAll.querySelector("input")
+            const optionInputReverse = optionReverse.querySelector("input")
+
+            const inputs = bomItems.querySelectorAll("input")
+            optionAll.addEventListener("click", function (e) {
+                e.preventDefault()
+                optionInputAll.checked = true
+                optionInputNotAll.checked = false
+                optionInputReverse.checked = false
+                inputs.forEach(input => input.checked = true)
+            })
+            optionNotAll.addEventListener("click", function (e) {
+                e.preventDefault()
+                optionInputAll.checked = false
+                optionInputNotAll.checked = true
+                optionInputReverse.checked = false
+                inputs.forEach(input => input.checked = false)
+            })
+            optionReverse.addEventListener("click", function (e) {
+                e.preventDefault()
+                optionInputAll.checked = false
+                optionInputNotAll.checked = false
+                optionInputReverse.checked = true
+                inputs.forEach(input => {
+                    input.checked = !input.checked
+                })
+            })
+        }
+    }
+
+    const env = new Env()
+    const ui = new UI()
+    ui.init()
+
+    document.querySelector(".dom-env-download").onclick = function () {
+        const domProps = []
+        domItems.querySelectorAll("input").forEach(input => {
+            input.checked && domProps.push(input.value)
+        })
+        domProps.forEach(async domProp => {
+            const proto = window[domProp].prototype
+            const protoText = domProp + ".prototype"
+            const {props: keys, envStr: funcEnvStr} = await env.autoGeneratorFuncDefine(proto, protoText)
+            const descEnvStr = env.getDescEnv(proto, protoText, keys, {
+                useRecord: false,
+                insertGetter0: () => ""
+            })
+            const envStr = `function ${domProp}() {}\n` + funcEnvStr + "\n" + descEnvStr
+            ui.downloadFile(envStr, domProp + ".js")
+        })
+    }
+
+    document.querySelector(".dom-env-hook-download").onclick = function () {
+        const domProps = []
+        domItems.querySelectorAll("input").forEach(input => {
+            input.checked && domProps.push(input.value)
+        })
+        domProps.forEach(async domProp => {
+            const proto = window[domProp].prototype
+            const protoText = domProp + ".prototype"
+            const {envStr: funcEnvStr} = await env.autoGeneratorFuncDefine(proto, protoText, true)
+            ui.downloadFile(funcEnvStr, domProp + "_Hook.js")
+        })
+    }
+
+    document.querySelector(".bom-env-download").onclick = function () {
+        const bomProps = []
+        bomItems.querySelectorAll("input").forEach(input => {
+            input.checked && bomProps.push(input.value)
+        })
+        bomProps.forEach(async bomProp => {
+            const proto = window[bomProp].prototype
+            const protoText = bomProp + ".prototype"
+            const {props: keys, envStr: funcEnvStr} = await env.autoGeneratorFuncDefine(proto, protoText)
+            const descEnvStr = env.getDescEnv(proto, protoText, keys, {
+                useRecord: false,
+                insertGetter0: () => ""
+            })
+            const envStr = `function ${bomProp}() {}\n` + funcEnvStr + "\n" + descEnvStr
+            ui.downloadFile(envStr, bomProp + ".js")
+        })
+    }
+
+</script>
+</body>
+</html>

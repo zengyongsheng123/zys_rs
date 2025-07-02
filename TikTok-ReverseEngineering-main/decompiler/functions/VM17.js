@@ -1,0 +1,69 @@
+function VM17() {
+ var v0,v1,v2; // BYTECODE_POS: GENERATED
+ var executionStack = [];          //BYTECODE_POS: GENEREATED 
+ v0 = executionStack[2];           //BYTECODE_POS: 1 depth
+ v0 = v0.document;                 //BYTECODE_POS: 4 
+ v1 = ""                           //BYTECODE_POS: 6 
+ v2 = document                     //BYTECODE_POS: 8 // return 'new ReferenceError(Z + " is not defined")' if not in globalThis
+ v2 = v2.characterSet;             //BYTECODE_POS: 10 
+ v1 += v2                          //BYTECODE_POS: 12 
+ v0.characterSet = v0;             //BYTECODE_POS: 13 
+ v0 = executionStack[2];           //BYTECODE_POS: 15 depth
+ v0 = v0.document;                 //BYTECODE_POS: 18 
+ v1 = ""                           //BYTECODE_POS: 20 
+ v2 = document                     //BYTECODE_POS: 22 // return 'new ReferenceError(Z + " is not defined")' if not in globalThis
+ v2 = v2.compatMode;               //BYTECODE_POS: 24 
+ v1 += v2                          //BYTECODE_POS: 26 
+ v0.compatMode = v0;               //BYTECODE_POS: 27 
+ v0 = executionStack[2];           //BYTECODE_POS: 29 depth
+ v0 = v0.document;                 //BYTECODE_POS: 32 
+ v1 = ""                           //BYTECODE_POS: 34 
+ v2 = document                     //BYTECODE_POS: 36 // return 'new ReferenceError(Z + " is not defined")' if not in globalThis
+ v2 = v2.documentMode;             //BYTECODE_POS: 38 
+ v1 += v2                          //BYTECODE_POS: 40 
+ v0.documentMode = v0;             //BYTECODE_POS: 41 
+ v0 = executionStack[2];           //BYTECODE_POS: 43 depth
+ v0 = v0.document;                 //BYTECODE_POS: 46 
+ v1 = ""                           //BYTECODE_POS: 48 
+ v2 = document                     //BYTECODE_POS: 50 // return 'new ReferenceError(Z + " is not defined")' if not in globalThis
+ v2 = v2.URL;                      //BYTECODE_POS: 52 
+ v1 += v2                          //BYTECODE_POS: 54 
+ v0.URL = v0;                      //BYTECODE_POS: 55 
+ v0 = executionStack[2];           //BYTECODE_POS: 57 depth
+ v0 = v0.document;                 //BYTECODE_POS: 60 
+ v1 = undefined                    //BYTECODE_POS: 62 
+ v2 = executionStack[14];          //BYTECODE_POS: 63 depth
+ v3 = document                     //BYTECODE_POS: 66 // return 'new ReferenceError(Z + " is not defined")' if not in globalThis
+ v3 = v3.layers;                   //BYTECODE_POS: 68 
+ v1 = v2(v3);                      //BYTECODE_POS: 70 // context 1 could be custom vm or native func
+ v0.layers = v0;                   //BYTECODE_POS: 72 
+ v0 = executionStack[2];           //BYTECODE_POS: 74 depth
+ v0 = v0.document;                 //BYTECODE_POS: 77 
+ v1 = undefined                    //BYTECODE_POS: 79 
+ v2 = executionStack[14];          //BYTECODE_POS: 80 depth
+ v3 = document                     //BYTECODE_POS: 83 // return 'new ReferenceError(Z + " is not defined")' if not in globalThis
+ v3 = v3.all;                      //BYTECODE_POS: 85 
+ v1 = v2(v3);                      //BYTECODE_POS: 87 // context 1 could be custom vm or native func
+ v0.all = v0;                      //BYTECODE_POS: 89 
+ v0 = executionStack[2];           //BYTECODE_POS: 91 depth
+ v0 = v0.document;                 //BYTECODE_POS: 94 
+ v1 = undefined                    //BYTECODE_POS: 96 
+ v2 = executionStack[14];          //BYTECODE_POS: 97 depth
+ v3 = document                     //BYTECODE_POS: 100 // return 'new ReferenceError(Z + " is not defined")' if not in globalThis
+ v3 = v3.images;                   //BYTECODE_POS: 102 
+ v1 = v2(v3);                      //BYTECODE_POS: 104 // context 1 could be custom vm or native func
+ v0.images = v0;                   //BYTECODE_POS: 106 
+ // go foward to 131               //BYTECODE_POS: 108 
+ executionStack[2] = v-1;          //BYTECODE_POS: 110 // depth = 0
+ v-1 = executionStack[11];         //BYTECODE_POS: 113 depth
+ v0 = v-1                          //BYTECODE_POS: 116 
+ v0 = v0.push;                     //BYTECODE_POS: 117 
+ v1 = {};                          //BYTECODE_POS: 119 
+ v2 = executionStack[2];           //BYTECODE_POS: 120 depth
+ v1.err = v2;                      //BYTECODE_POS: 123 
+ v2 = "d_d"                        //BYTECODE_POS: 125 
+ v1.type = v2;                     //BYTECODE_POS: 127 
+ v-1 = v0(v1);                     //BYTECODE_POS: 129 // context -1 could be custom vm or native func
+ v-1 = undefined                   //BYTECODE_POS: 132 
+ //return v-1;                     //BYTECODE_POS: 133 
+}

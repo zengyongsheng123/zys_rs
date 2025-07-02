@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<input id="box" type="text">
+<button onclick="aaa()">发送数据</button>
+
+<script>
+    var client = new WebSocket('ws://127.0.0.1:8081')
+
+    // 链接失败的回调
+    client.onerror = function () {
+        console.log('链接失败.........')
+    }
+    // 链接成功
+    client.onopen = function () {
+        console.log('链接成功....')
+    }
+    // 接受到服务器数据的回调
+    client.onmessage = function (event) {
+        console.log('服务器发送的数据', event.data)
+    }
+    // 链接关闭的回调方法
+    client.onclose = function () {
+        console.log('链接关闭的回调........')
+    }
+
+    function aaa() {
+        var text = document.getElementById('box').value
+        // 发送数据给服务器
+        client.send(text)
+    }
+
+</script>
+
+
+</body>
+</html>
