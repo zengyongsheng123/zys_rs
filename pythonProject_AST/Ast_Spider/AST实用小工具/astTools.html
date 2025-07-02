@@ -1,0 +1,855 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>AST小工具合集</title>
+	<textarea class='input' type='text' id='obcode'></textarea>
+	<script src="babel_pack.js"></script>
+	<button class="decodeStr" onclick="decodeJsCode()">还原预处理</button>
+	<button class="constFold" onclick="codeConstFold()">常量计算</button>
+	<button class="removeWin" onclick="removeWindow()">window移除</button>
+	<button class="format" onclick="formatJsCode()">格式化代码</button>
+	<button class="compact" onclick="compactJsCode()">源代码压缩</button>
+	<button class="change" onclick="changeCode()">结果置换</button>
+	<button class="copy" onclick="copyJsCode()">复制结果</button>
+	<button class="clear" onclick="clearJsCode()">清空</button>
+	<textarea type="text" id="hideHosts"
+		style="position:absolute ;z-index: -100;font-size: 0px;width: 0px;height: 0px;overflow: hidden"></textarea>
+	<textarea class='result' type='text' id='obresult'></textarea>
+	<style>
+		.input {
+			width: 40%;
+			height: 90vh;
+			margin-left: 55px;
+		}
+
+		.result {
+			width: 40%;
+			height: 90vh;
+			margin-left: 155px;
+		}
+
+		.decodeStr {
+			width: 126px;
+			position: fixed;
+			top: 11vh;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+			font-family: inherit;
+			display: inline-block;
+			line-height: 1;
+			white-space: nowrap;
+			cursor: pointer;
+			background: #fff;
+			border: 1px solid #dcdfe6;
+			-webkit-appearance: none;
+			text-align: center;
+			box-sizing: border-box;
+			outline: none;
+			transition: .1s;
+			font-weight: 500;
+			-webkit-user-select: none;
+			padding: 12px 20px;
+			font-size: 14px;
+			border-radius: 4px;
+			color: #fff;
+			background-color: #308014;
+			border-color: #308014;
+			margin: 0 10px 0;
+		}
+		
+		.constFold {
+			width: 126px;
+			position: fixed;
+			top: 18vh;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+			font-family: inherit;
+			display: inline-block;
+			line-height: 1;
+			white-space: nowrap;
+			cursor: pointer;
+			background: #fff;
+			border: 1px solid #dcdfe6;
+			-webkit-appearance: none;
+			text-align: center;
+			box-sizing: border-box;
+			outline: none;
+			transition: .1s;
+			font-weight: 500;
+			-webkit-user-select: none;
+			padding: 12px 20px;
+			font-size: 14px;
+			border-radius: 4px;
+			color: #fff;
+			background-color: #B0E0E6;
+			border-color: #B0E0E6;
+			margin: 0 10px 0;
+		}
+		
+		
+		.removeWin {
+			width: 126px;
+			position: fixed;
+			top: 25vh;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+			font-family: inherit;
+			display: inline-block;
+			line-height: 1;
+			white-space: nowrap;
+			cursor: pointer;
+			background: #fff;
+			border: 1px solid #dcdfe6;
+			-webkit-appearance: none;
+			text-align: center;
+			box-sizing: border-box;
+			outline: none;
+			transition: .1s;
+			font-weight: 500;
+			-webkit-user-select: none;
+			padding: 12px 20px;
+			font-size: 14px;
+			border-radius: 4px;
+			color: #fff;
+			background-color: #4169e1;
+			border-color: #4169e1;
+			margin: 0 10px 0;
+		}
+
+		.format {
+			width: 126px;
+			position: fixed;
+			top: 33vh;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+			font-family: inherit;
+			display: inline-block;
+			line-height: 1;
+			white-space: nowrap;
+			cursor: pointer;
+			background: #fff;
+			border: 1px solid #dcdfe6;
+			-webkit-appearance: none;
+			text-align: center;
+			box-sizing: border-box;
+			outline: none;
+			transition: .1s;
+			font-weight: 500;
+			-webkit-user-select: none;
+			padding: 12px 20px;
+			font-size: 14px;
+			border-radius: 4px;
+			color: #fff;
+			background-color: #67c23a;
+			border-color: #67c23a;
+			margin: 0 10px 0;
+		}
+
+		.compact {
+			width: 126px;
+			position: fixed;
+			top: 40vh;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+			font-family: inherit;
+			display: inline-block;
+			line-height: 1;
+			white-space: nowrap;
+			cursor: pointer;
+			background: #fff;
+			border: 1px solid #dcdfe6;
+			-webkit-appearance: none;
+			text-align: center;
+			box-sizing: border-box;
+			outline: none;
+			transition: .1s;
+			font-weight: 500;
+			-webkit-user-select: none;
+			padding: 12px 20px;
+			font-size: 14px;
+			border-radius: 4px;
+			color: #fff;
+			background-color: #A020F0;
+			border-color: #A020F0;
+			margin: 0 10px 0;
+		}
+
+		.change {
+			width: 126px;
+			position: fixed;
+			top: 48vh;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+			font-family: inherit;
+			display: inline-block;
+			line-height: 1;
+			white-space: nowrap;
+			cursor: pointer;
+			background: #fff;
+			border: 1px solid #dcdfe6;
+			-webkit-appearance: none;
+			text-align: center;
+			box-sizing: border-box;
+			outline: none;
+			transition: .1s;
+			font-weight: 500;
+			-webkit-user-select: none;
+			padding: 12px 20px;
+			font-size: 14px;
+			border-radius: 4px;
+			color: #fff;
+			background-color: #872657;
+			border-color: #872657;
+			margin: 0 10px 0;
+		}
+
+		.copy {
+			width: 126px;
+			position: fixed;
+			top: 55vh;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+			font-family: inherit;
+			display: inline-block;
+			line-height: 1;
+			white-space: nowrap;
+			cursor: pointer;
+			background: #fff;
+			border: 1px solid #dcdfe6;
+			-webkit-appearance: none;
+			text-align: center;
+			box-sizing: border-box;
+			outline: none;
+			transition: .1s;
+			font-weight: 500;
+			-webkit-user-select: none;
+			padding: 12px 20px;
+			font-size: 14px;
+			border-radius: 4px;
+			color: #fff;
+			background-color: #FF00FF;
+			border-color: #FF00FF;
+			margin: 0 10px 0;
+		}
+
+		.clear {
+			width: 126px;
+			position: fixed;
+			top: 62vh;
+			-webkit-font-smoothing: antialiased;
+			-webkit-tap-highlight-color: transparent;
+			font-family: inherit;
+			display: inline-block;
+			line-height: 1;
+			white-space: nowrap;
+			cursor: pointer;
+			background: #fff;
+			border: 1px solid #dcdfe6;
+			-webkit-appearance: none;
+			text-align: center;
+			box-sizing: border-box;
+			outline: none;
+			transition: .1s;
+			font-weight: 500;
+			-webkit-user-select: none;
+			padding: 12px 20px;
+			font-size: 14px;
+			border-radius: 4px;
+			color: #fff;
+			background-color: #802a2a;
+			border-color: #802a2a;
+			margin: 0 10px 0;
+		}
+	</style>
+</head>
+
+<body>
+
+	<script>
+
+		var box = document.querySelector('.input');
+		document.ondrop = function (e) {
+			e.preventDefault();
+		}
+		document.ondragover = function (e) {
+			e.preventDefault();
+		}
+
+		box.ondrop = function (e) {
+			var dataFile = e.dataTransfer.files[0];
+
+			// FileReader实例化
+			var fr = new FileReader();
+			// 异步读取文件
+			fr.readAsText(dataFile);
+			// 读取完毕之后执行
+			fr.onload = function () {
+				// 获取得到的结果
+				var data = fr.result;
+				document.getElementById("obcode").value = data;
+			}
+		}
+
+
+		const simplifyLiteral = {
+			NumericLiteral({ node }) {
+				if (node.extra && /^0[obx]/i.test(node.extra.raw)) {
+					node.extra = undefined;
+				}
+			},
+			StringLiteral({ node }) {
+				if (node.extra && /\\[ux]/gi.test(node.extra.raw)) {
+					node.extra = undefined;
+				}
+			},
+		}
+
+
+		const constantFold =
+		{
+			"BinaryExpression|UnaryExpression"(path) {
+				if (path.isUnaryExpression({ operator: "-" }) ||
+					path.isUnaryExpression({ operator: "void" })) {
+					return;
+				}
+				const { confident, value } = path.evaluate();
+				if (!confident)
+					return;
+				if (typeof value == 'number' && (!Number.isFinite(value))) {
+					return;
+				}
+				path.replaceWith(types.valueToNode(value));
+			},
+		}
+		
+		
+
+		const restoreVarDeclarator = {
+
+			VariableDeclarator(path) {
+				let scope = path.scope;
+				let { id, init } = path.node;
+
+				if (!types.isIdentifier(id) || init == null) {
+					return;
+				}
+
+				if (types.isUnaryExpression(init)) {//处理 var b = -5;
+					let { operator, argument } = init;
+					if (!["+", "-"].includes(operator) || !types.isLiteral(argument)) {
+						return;
+					}
+				}
+
+				else if (types.isIdentifier(init)) {//处理 var c = String;
+					if (typeof this[init.name] == 'undefined') {
+						return;
+					}
+				}
+				else if (types.isMemberExpression(init)) {//处理 var d = String.fromCharCode;
+					let name = init.object.name;
+					if (typeof this[name] == 'undefined' || name == 'window') {//注意object为window时，可能会还原出错
+						return;
+					}
+				}
+
+				else if (!types.isLiteral(init)) {
+					return;
+				}
+
+				const binding = scope.getBinding(id.name);
+
+				let { constant, referencePaths, constantViolations } = binding;  //变量的定义一定会有binding.
+
+				if (!constant) {//新版本的babel库，在循环里面的变量定义，默认非常量
+					if (constantViolations.length != 1 || constantViolations[0] != path) //旧版本屏蔽该行即可
+					{
+						return;
+					}
+				}
+
+				for (let referPath of referencePaths) {
+					referPath.replaceWith(init);
+				}
+
+				path.remove();//没有被引用，或者替换完成，可直接删除
+
+			},
+		}
+
+
+		const keyToLiteral = {
+			MemberExpression:
+			{
+				exit({ node }) {
+					const prop = node.property;
+					if (!node.computed && types.isIdentifier(prop)) {
+						node.property = types.StringLiteral(prop.name);
+						node.computed = true;
+					}
+				}
+			},
+			ObjectProperty:
+			{
+				exit({ node }) {
+					const key = node.key;
+					if (!node.computed && types.isIdentifier(key)) {
+						node.key = types.StringLiteral(key.name);
+						return;
+					}
+					if (node.computed && types.isStringLiteral(key)) {
+						node.computed = false;
+					}
+				}
+			},
+		}
+
+
+		function isBaseLiteral(node) {
+			if (types.isLiteral(node)) {
+				return true;
+			}
+			if (types.isUnaryExpression(node, { operator: "-" }) ||
+				types.isUnaryExpression(node, { operator: "+" })) {
+				return isBaseLiteral(node.argument);
+			}
+
+			return false;
+		}
+
+
+		const decodeValueOfObject =
+		{//当一个object里面的value全部为字面量时的还原，没有考虑单个key重新赋值的情况。
+			VariableDeclarator(path) {
+				let { node, scope } = path;
+				const { id, init } = node;
+				if (!types.isObjectExpression(init)) return;
+
+				let properties = init.properties;
+				if (properties.length == 0 || !properties.every(property => isBaseLiteral(property.value)))
+					return;
+
+				let binding = scope.getBinding(id.name);
+
+				let { constant, referencePaths, constantViolations } = binding;
+
+				if (!constant) {//新版本的babel库，在循环里面的变量定义，默认非常量
+					if (constantViolations.length != 1 || constantViolations[0] != path) //旧版本屏蔽该行即可
+					{
+						return;
+					}
+				}
+
+				let newMap = new Map();
+				for (const property of properties) {
+					let { key, value } = property;
+					newMap.set(key.value, value);
+				}
+
+				let canBeRemoved = true;
+				for (const referPath of referencePaths) {
+					let { parentPath } = referPath;
+					if (!parentPath.isMemberExpression()) {
+						canBeRemoved = false;
+						return;
+					}
+
+					let AncestorPath = parentPath.parentPath;
+
+					if (AncestorPath.isAssignmentExpression({ "left": parentPath.node })) {
+						canBeRemoved = false;
+						return;
+					}
+					if (AncestorPath.isUpdateExpression() && ['++', '--'].includes(AncestorPath.node.operator)) {
+						canBeRemoved = false;
+						return;
+					}
+
+					let curKey = parentPath.node.property.value;
+					if (!newMap.has(curKey)) {
+						canBeRemoved = false;
+						break;
+					}
+					parentPath.replaceWith(newMap.get(curKey));
+				}
+				canBeRemoved && path.remove();
+				newMap.clear();
+			},
+		}
+
+
+		const DeclaratorToDeclaration =
+		{
+			VariableDeclaration(path) {
+				let { parentPath, node } = path;
+				if (!parentPath.isBlock()) {
+					return;
+				}
+				let { declarations, kind } = node;
+
+				if (declarations.length == 1) {
+					return;
+				}
+
+				let newNodes = [];
+
+				for (const varNode of declarations) {
+					let newDeclartionNode = types.VariableDeclaration(kind, [varNode]);
+					newNodes.push(newDeclartionNode);
+				}
+
+				path.replaceWithMultiple(newNodes);
+
+			},
+		}
+		
+		function isNodeLiteral(node) {
+			if (Array.isArray(node)) {
+				return node.every(ele => isNodeLiteral(ele));
+			}
+			if (types.isLiteral(node)) {
+				if (node.value == null) {
+					return false;
+				}
+				return true;
+			}
+			if (types.isBinaryExpression(node)) {
+				return isNodeLiteral(node.left) && isNodeLiteral(node.right);
+			}
+			if (types.isUnaryExpression(node, {
+				"operator": "-"
+			}) || types.isUnaryExpression(node, {
+				"operator": "+"
+			})) {
+				return isNodeLiteral(node.argument);
+			}
+
+			if (types.isObjectExpression(node)) {
+				let { properties } = node;
+				if (properties.length == 0) {
+					return true;
+				}
+
+				return properties.every(property => isNodeLiteral(property));
+
+			}
+			if (types.isArrayExpression(node)) {
+				let { elements } = node;
+				if (elements.length == 0) {
+					return true;
+				}
+				return elements.every(element => isNodeLiteral(element));
+			}
+
+			return false;
+		}
+		
+		
+		let falseList = ["exports","module"]; //可自行扩展列表
+
+		const evaluateGlobalFunc =
+		{//系统全局函数的还原，仅限单个名称的全局函数。请在node环境或者浏览器环境下运行。
+			"CallExpression"(path) {
+
+				let { callee, arguments } = path.node;
+
+				if (!types.isIdentifier(callee) || callee.name == "eval") return;//仅处理单个函数名，过滤掉 MemberExpression
+
+				if (arguments.length == 0 || !isNodeLiteral(arguments)) return; //判断实参是否全部为字面量。
+
+				let func = this[callee.name]; //本地获取函数名
+
+				if (typeof func != "function") return;  //如果不是全局函数，则返回
+
+				let args = [];
+
+				arguments.forEach((ele, index) => { args[index] = ele.value; }); //获取实参
+
+				let value = func.apply(null, args); //计算结果
+
+				if (typeof value == "function" || typeof value == "undefined") return;
+
+				path.replaceWith(types.valueToNode(value)); //替换
+			},
+			"UnaryExpression"(path)
+			{
+				let {operator,argument} = path.node;
+				
+				if (operator != "typeof") return;
+				
+				if (types.isIdentifier(argument))
+				{
+					let name = argument.name;
+					
+					if(falseList.includes(name))
+					{
+						path.replaceWith(types.valueToNode("undefined"));
+						return;
+					}
+					
+					let value = typeof this[name];
+					
+					if (value != "undefined")
+					{
+						//console.log(path.toString(),"-->",value);
+						path.replaceWith(types.valueToNode(value));
+					}
+					return;
+				}
+				
+				if (types.isMemberExpression(argument))
+				{
+					let {object,property} = argument;
+					
+					if (!types.isIdentifier(object) || object.name == "window" || !this[object.name]  || 
+					    !types.isStringLiteral(property))
+					{
+						return;
+					}
+					
+					let value = typeof this[object.name][property.value];
+					if (value != "undefined")
+					{
+						console.log(path.toString(),"-->",value);
+						path.replaceWith(types.valueToNode(value));
+					}
+					return;
+				}
+			},
+		}
+		
+		
+const removeDeadCode = {
+	"IfStatement|ConditionalExpression"(path)
+	{
+		let {consequent,alternate} = path.node;
+		let testPath = path.get('test');
+		const evaluateTest = testPath.evaluateTruthy();
+		if (evaluateTest === true)
+		{
+			if (types.isBlockStatement(consequent))
+			{
+				consequent = consequent.body;
+			}
+			path.replaceWithMultiple(consequent);
+		}
+		else if (evaluateTest === false)
+		{
+			if (alternate != null)
+			{
+				if (types.isBlockStatement(alternate))
+			  {
+			  	alternate = alternate.body;
+			  }
+				path.replaceWithMultiple(alternate);
+			}
+			else
+			{
+				path.remove();
+			}
+		}  		
+	},
+	"LogicalExpression"(path)
+	{
+		let {left,operator,right} = path.node;
+		
+		let leftPath = path.get('left');
+		
+		const evaluateLeft = leftPath.evaluateTruthy();
+		
+		if (operator == "||" && evaluateLeft == true)
+		{
+			path.replaceWith(left);
+			return;
+		}
+		if (operator == "||" && evaluateLeft == false)
+		{
+			path.replaceWith(right);
+			return;
+		}		
+		if (operator == "&&" && evaluateLeft == true)
+		{
+			path.replaceWith(right);
+			return;
+		}
+		if (operator == "&&" && evaluateLeft == false)
+		{
+			path.replaceWith(left);
+			return;
+		}
+	},
+  "EmptyStatement|DebuggerStatement"(path)
+  {
+  	path.remove();
+  }, 
+}
+		
+		
+		
+		function codeConstFold() {
+			var jscode = document.getElementById("obcode").value;
+			
+			if (jscode.length == 0)
+			{
+				alert("请在左编辑框输入混淆前的代码!");
+				return;
+			}
+
+
+			let ast = parser.parse(jscode);
+
+			traverse(ast, constantFold);
+			
+			traverse(ast, keyToLiteral);
+			
+			traverse(ast, evaluateGlobalFunc);
+			
+			traverse(ast, constantFold);
+			
+			traverse(ast, removeDeadCode);
+			
+			let { code } = generator(ast);
+
+			document.getElementById("obresult").value = code;
+
+		}
+		
+		const MemberExpressionToIdentifier = 
+		{
+			MemberExpression(path)
+			{
+				let {object,property} = path.node;
+				if (!types.isIdentifier(object,{name:"window"}) ||
+		    !types.isStringLiteral(property) || typeof window[property.value] == 'undefined')
+		    {
+		    	return;
+		    }
+		    
+		    let IdentifierNode = types.Identifier(property.value);
+		    
+		    path.replaceWith(IdentifierNode);
+		  },
+		}
+		
+		function removeWindow()
+		{
+			var jscode = document.getElementById("obcode").value;
+			
+			if (jscode.length == 0)
+			{
+				alert("请在左编辑框输入混淆前的代码!");
+				return;
+			}
+
+
+			let ast = parser.parse(jscode);
+			
+			traverse(ast, keyToLiteral);
+			
+			traverse(ast, MemberExpressionToIdentifier);
+
+			let { code } = generator(ast);
+
+			document.getElementById("obresult").value = code;			
+		}
+
+
+
+		function decodeJsCode() {
+			var jscode = document.getElementById("obcode").value;
+			
+			if (jscode.length == 0)
+			{
+				alert("请在左编辑框输入混淆前的代码!");
+				return;
+			}
+
+			let ast = parser.parse(jscode);
+
+			traverse(ast, simplifyLiteral);
+
+			traverse(ast, constantFold);
+
+			traverse(ast, restoreVarDeclarator);
+
+			traverse(ast, constantFold);
+
+			traverse(ast, keyToLiteral);
+
+			traverse(ast, decodeValueOfObject);
+
+			traverse(ast, constantFold);
+			
+			traverse(ast, DeclaratorToDeclaration);
+
+			let { code } = generator(ast, opts = { jsescOption: { "minimal": true } });
+
+			document.getElementById("obresult").value = code;
+
+		}
+
+		function changeCode() {
+			var jscode = document.getElementById("obresult").value;
+			if (jscode.length == 0) {
+				alert("resultCode为空,无法置换");
+				return;
+			}
+			document.getElementById("obcode").value = jscode;
+			document.getElementById("obresult").value = '';
+		}
+
+		function formatJsCode() {
+			var jscode = document.getElementById("obcode").value;
+
+			let ast = parser.parse(jscode);
+
+			let { code } = generator(ast, opts = { jsescOption: { "minimal": true } });
+
+			document.getElementById("obresult").value = code;
+		}
+
+		function compactJsCode() {
+
+			var jscode = document.getElementById("obcode").value;
+
+			let ast = parser.parse(jscode);
+
+			let { code } = generator(ast, opts = { "compact": true, });
+
+			document.getElementById("obresult").value = code;
+		}
+
+		function clearJsCode() {
+			location.reload()
+		}
+
+
+
+		function copyJsCode() {
+			let code = document.getElementById("obresult").value;
+			if (code.length == 0) {
+				alert("没有可以保存的代码!");
+				return;
+			}
+
+			let copyVal = document.getElementById("obresult");
+
+			let hideHosts = document.getElementById("hideHosts");
+
+			hideHosts.value = copyVal.value;
+
+			hideHosts.select();
+
+			document.execCommand('copy')
+
+			alert("已复制到剪切板!");
+
+
+		}
+
+	</script>
+</body>
+
+</html>
