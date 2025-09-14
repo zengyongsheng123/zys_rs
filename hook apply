@@ -1,0 +1,17 @@
+(function () {
+//保存原始 apply方法
+const originalApply = Function.prototype.apply;
+
+//Hook apply 方法
+Function.prototype.apply = function (thisArg, argsArray) {
+  // 记录调用函数引用
+  const calledFunction = this;
+  // 调用原始 apply 并获取结果
+  const result = originalApply.call(this, thisArg, argsArray);
+  if(this.name==="push"){
+    return result;
+  }
+  console.log("[Hook调用apply]","调用对象===>",this.name,"对象方法/函数===>",thisArg,"入参===>",argsArray,"返回值===>",result);
+  return result;
+};
+})();
