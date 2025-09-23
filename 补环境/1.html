@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript代理调试工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .param-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px;
+        }
+
+        .param-label {
+            font-weight: bold;
+            color: #2980b9;
+        }
+
+        .param-value {
+            word-break: break-all;
+        }
+
+        .signature-display {
+            background: #34495e;
+            color: #f1c40f;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.2rem;
+            overflow-x: auto;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-active {
+            background: #2ecc71;
+        }
+
+        .status-inactive {
+            background: #e74c3c;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .debug-area {
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .debug-entry {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-family: monospace;
+        }
+
+        .debug-timestamp {
+            color: #7f8c8d;
+            margin-right: 10px;
+        }
+
+        .visualization {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 120px;
+            margin: 20px 0;
+        }
+
+        .viz-box {
+            width: 60px;
+            height: 60px;
+            background: #3498db;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: all 0.5s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .viz-box.active {
+            transform: scale(1.2);
+            background: #2ecc71;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>JavaScript代理调试工具</h1>
+
+    <div class="container">
+        <div class="left-column">
+            <div class="card">
+                <h2>参数信息</h2>
+                <div class="param-grid">
+                    <div class="param-label">当前时间戳:</div>
+                    <div class="param-value" id="timestamp">加载中...</div>
+
+                    <div class="param-label">appid:</div>
+                    <div class="param-value">search-pc-java</div>
+
+                    <div class="param-label">functionId:</div>
+                    <div class="param-value">pc_search_searchWare</div>
+
+                    <div class="param-label">client:</div>
+                    <div class="param-value">pc</div>
+
+                    <div class="param-label">clientVersion:</div>
+                    <div class="param-value">1.0.0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>请求参数</h2>
+                <div class="code-block">
+// params 对象内容
+{
+    "enc": "utf-8",
+    "pvid": "f945e4fc1628448aaf9f567f3b9b1e3e",
+    "area": "2_2813_61125_0",
+    "page": 6,
+    "s": 115
+}
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>签名状态</h2>
+                <p><span class="status-indicator status-active"></span> SHA256哈希计算: <span id="hash-status">就绪</span></p>
+                <p><span class="status-indicator status-active"></span> ParamsSign初始化: <span id="sign-status">就绪</span></p>
+                <p><span class="status-indicator status-inactive"></span> 代理监视状态: <span id="proxy-status">未激活</span></p>
+
+                <div class="visualization">
+                    <div class="viz-box" id="viz-1">1</div>
+                    <div class="viz-box" id="viz-2">2</div>
+                    <div class="viz-box" id="viz-3">3</div>
+                    <div class="viz-box" id="viz-4">4</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <div class="card">
+                <h2>生成的签名</h2>
+                <div class="signature-display" id="signature-output">
+                    等待生成签名...
+                </div>
+                <button class="btn" id="generate-btn">生成签名</button>
+                <button class="btn" id="simulate-btn">模拟代理</button>
+            </div>
+
+            <div class="card">
+                <h2>调试信息</h2>
+                <div class="debug-area" id="debug-output">
+                    <div class="debug-entry"><span class="debug-timestamp">[系统]</span> 初始化调试工具...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>代码示例</h2>
+                <div class="code-block">
+// 代理监视示例代码
+function watch(obj, name) {
+    console.log(`开始监视 ${name} 对象`);
+    return new Proxy(obj, {
+        set(target, property, value) {
+            console.log(`设置 ${name}.${property} = ${value}`);
+            debugLog(`代理捕获: 设置 ${name}.${property}`);
+            return Reflect.set(target, property, value);
+        },
+        get(target, property) {
+            console.log(`读取 ${name}.${property}`);
+            return Reflect.get(target, property);
+        }
+    });
+}
+
+// 模拟SHA256函数
+window.SHA256 = function(str) {
+    // 这里是模拟实现，实际中应使用加密库
+    return 'sha256-' + str.length + '-' + Math.random().toString(36).substr(2, 9);
+};
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>调试工具模拟界面 - 用于演示JavaScript代理和签名生成过程</p>
+    </div>
+
+    <script>
+        // 初始化时间戳
+        document.getElementById('timestamp').textContent = Date.now();
+
+        // 更新调试信息
+        function debugLog(message) {
+            const debugArea = document.getElementById('debug-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = 'debug-entry';
+            entry.innerHTML = `<span class="debug-timestamp">[${timestamp}]</span> ${message}`;
+            debugArea.appendChild(entry);
+            debugArea.scrollTop = debugArea.scrollHeight;
+        }
+
+        // 模拟SHA256函数
+        window.SHA256 = function(str) {
+            // 模拟实现 - 实际中应使用加密库
+            const simulatedHash = 'sha256-' + str.length + '-' + Math.random().toString(36).substr(2, 9);
+            debugLog(`计算SHA256: ${str} -> ${simulatedHash}`);
+            return simulatedHash;
+        };
+
+        // 模拟ParamsSign类
+        class ParamsSign {
+            constructor(config) {
+                this.appId = config.appId || 'default';
+                debugLog(`初始化ParamsSign，appId: ${this.appId}`);
+                document.getElementById('sign-status').textContent = '已完成';
+                document.getElementById('viz-2').classList.add('active');
+            }
+
+            _$sdnmd(params) {
+                debugLog(`生成签名，参数: ${JSON.stringify(params)}`);
+
+                // 模拟签名生成
+                const signature = 'sign_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+                // 可视化效果
+                const vizBoxes = document.querySelectorAll('.viz-box');
+                vizBoxes.forEach(box => box.classList.remove('active'));
+                document.getElementById('viz-4').classList.add('active');
+
+                return signature;
+            }
+        }
+
+        window.ParamsSign = ParamsSign;
+
+        // 模拟代理函数
+        function watch(obj, name) {
+            debugLog(`设置代理监视: ${name}`);
+            document.getElementById('proxy-status').textContent = '已激活';
+            document.getElementById('viz-3').classList.add('active');
+
+            return new Proxy(obj, {
+                set(target, property, value) {
+                    debugLog(`代理捕获: 设置 ${name}.${property} = ${value}`);
+                    return Reflect.set(target, property, value);
+                },
+                get(target, property) {
+                    debugLog(`代理捕获: 读取 ${name}.${property}`);
+                    return Reflect.get(target, property);
+                }
+            });
+        }
+
+        // 绑定按钮事件
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            debugLog('用户点击生成签名按钮');
+
+            // 模拟参数
+            const paramsH5sign = {
+                appid: 'search-pc-java',
+                functionId: "pc_search_searchWare",
+                client: 'pc',
+                clientVersion: '1.0.0',
+                t: Date.now()
+            };
+
+            const params = {
+                "enc": "utf-8",
+                "pvid": "f945e4fc1628448aaf9f567f3b9b1e3e",
+                "area": "2_2813_61125_0",
+                "page": 6,
+                "s": 115
+            };
+
+            // 更新UI
+            document.getElementById('timestamp').textContent = paramsH5sign.t;
+            document.getElementById('viz-1').classList.add('active');
+
+            // 计算SHA256
+            paramsH5sign.body = window.SHA256(JSON.stringify(params));
+
+            // 生成签名
+            window.PSign = new window.ParamsSign({appId: 'f06cc'});
+            const signature = window.PSign._$sdnmd(paramsH5sign);
+
+            // 显示签名
+            document.getElementById('signature-output').textContent = signature;
+            debugLog(`签名生成完成: ${signature}`);
+        });
+
+        document.getElementById('simulate-btn').addEventListener('click', function() {
+            debugLog('用户点击模拟代理按钮');
+
+            // 模拟设置代理
+            window = global || {};
+            window = watch(window, 'window');
+
+            // 模拟一些操作
+            window.testValue = 'test_' + Date.now();
+            const readValue = window.testValue;
+        });
+
+        // 初始日志
+        debugLog('系统就绪，可以开始调试');
+    </script>
+</body>
+</html>
